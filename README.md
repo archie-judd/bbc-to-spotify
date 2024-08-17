@@ -149,7 +149,7 @@ bbc-to-spotify sync <playlist-id> <source> [options]
 > `radio-1-xtra`\
 > `radio-2`\
 > `radio-6`\
-> `bbc-asia-service`
+> `bbc-asian-network`
 
 **Options**
 
