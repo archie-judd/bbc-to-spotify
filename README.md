@@ -2,6 +2,8 @@
 
 A CLI tool for syncing songs from BBC radio playlists to Spotify.
 
+Written in python and packaged with nix.
+
 ## Contents
 
 <!-- vim-markdown-toc GFM -->
