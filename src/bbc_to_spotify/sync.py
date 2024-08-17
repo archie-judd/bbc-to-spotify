@@ -203,7 +203,7 @@ def scrape_tracks_and_get_from_spotify(
 
 def add_tracks(
     spotify_client: Spotify,
-    dest_playlist_id: str,
+    playlist_id: str,
     dest_tracks: list[Track],
     source_tracks: list[Track],
     remove_duplicates: bool,
@@ -220,7 +220,7 @@ def add_tracks(
         logging.info(f"Addings these tracks: {[track.name for track in source_tracks]}")
         if not dry_run:
             spotify_client.add_to_playlist(
-                playlist_id=dest_playlist_id,
+                playlist_id=playlist_id,
                 track_uris=[track.uri for track in tracks_to_add],
             )
         else:
@@ -231,7 +231,7 @@ def add_tracks(
 
 def prune_and_add_tracks(
     spotify_client: Spotify,
-    dest_playlist_id: str,
+    playlist_id: str,
     dest_tracks: list[Track],
     source_tracks: list[Track],
     dry_run: bool,
@@ -249,7 +249,7 @@ def prune_and_add_tracks(
         )
         if not dry_run:
             spotify_client.remove_from_playlist(
-                playlist_id=dest_playlist_id,
+                playlist_id=playlist_id,
                 track_uris=[track.uri for track in tracks_to_remove],
             )
         else:
@@ -260,7 +260,7 @@ def prune_and_add_tracks(
     # Only add tracks that are not in the remaining source tracks
     add_tracks(
         spotify_client=spotify_client,
-        dest_playlist_id=dest_playlist_id,
+        playlist_id=dest_playlist_id,
         dest_tracks=list(tracks_to_stay),
         source_tracks=source_tracks,
         remove_duplicates=True,
@@ -308,7 +308,7 @@ def sync(
     if prune_dest:
         prune_and_add_tracks(
             spotify_client=spotify_client,
-            dest_playlist_id=dest_playlist.id,
+            playlist_id=dest_playlist.id,
             dest_tracks=dest_playlist.tracks,
             source_tracks=source_tracks,
             dry_run=dry_run,
@@ -316,7 +316,7 @@ def sync(
     else:
         add_tracks(
             spotify_client=spotify_client,
-            dest_playlist_id=dest_playlist.id,
+            playlist_id=dest_playlist.id,
             dest_tracks=dest_playlist.tracks,
             source_tracks=source_tracks,
             remove_duplicates=remove_duplicates,
