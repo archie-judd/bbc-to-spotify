@@ -45,7 +45,7 @@ def main():
         credentials = maybe_get_credentials()
         if credentials is None:
             print(
-                "No credentials found, run 'bbc-to-spotify authorize' to generate"
+                "No credentials found, run 'bbc-to-spotify authorize' to generate "
                 "credentials, or alternatively set the environment variables "
                 "SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN."
             )
