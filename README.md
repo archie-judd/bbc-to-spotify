@@ -175,7 +175,7 @@ bbc-to-spotify sync <playlist-id> <source> [options]
 
 `--quiet`, `-q` (flag):
 
-> Decrease logging verbosity (`-vv` to decrease further).
+> Decrease logging verbosity (`-qq` to decrease further).
 
 `--log-file <filepath>` (string):
 
