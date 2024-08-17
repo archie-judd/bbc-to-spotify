@@ -44,11 +44,11 @@ def main():
     elif args.command == "sync":
         credentials = maybe_get_credentials()
         if credentials is None:
-            logging.info("""
-            No credentials found, run 'bbc-to-spotify authorize' to generate credentials, or
-            alternatively set the environment variables SPOTIFY_CLIENT_ID, 
-            SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN.
-            """)
+            print(
+                "No credentials found, run 'bbc-to-spotify authorize' to generate"
+                "credentials, or alternatively set the environment variables "
+                "SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN."
+            )
         else:
             sync(
                 credentials=credentials,
