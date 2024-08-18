@@ -224,9 +224,9 @@ def add_tracks(
                 track_uris=[track.uri for track in tracks_to_add],
             )
         else:
-            logging.info("No tracks added (dry run)")
+            logging.info("No tracks added (dry run).")
     else:
-        logging.info(f"No tracks to add")
+        logging.info(f"No tracks to add.")
 
 
 def prune_and_add_tracks(
@@ -237,7 +237,7 @@ def prune_and_add_tracks(
     dry_run: bool,
 ):
 
-    logging.info("Pruning destination playlist")
+    logging.info("Pruning destination playlist.")
     # Deduplicate the destination playlist, and remove any tracks that are not in the
     # source playlist.
     tracks_to_stay = set(t for t in source_tracks if dest_tracks.count(t) == 1)
@@ -253,14 +253,14 @@ def prune_and_add_tracks(
                 track_uris=[track.uri for track in tracks_to_remove],
             )
         else:
-            logging.info("No tracks removed (dry run)")
+            logging.info("No tracks removed (dry run).")
     else:
-        logging.info("No tracks to remove")
+        logging.info("No tracks to remove.")
 
     # Only add tracks that are not in the remaining source tracks
     add_tracks(
         spotify_client=spotify_client,
-        playlist_id=dest_playlist_id,
+        playlist_id=playlist_id,
         dest_tracks=list(tracks_to_stay),
         source_tracks=source_tracks,
         remove_duplicates=True,
@@ -271,7 +271,7 @@ def prune_and_add_tracks(
 def add_timestamp_to_desc(
     spotify_client: Spotify, playlist: Playlist, dry_run: bool = False
 ):
-    logging.info("Updating playlist description")
+    logging.info("Updating playlist description.")
     updated_description = make_updated_playlist_description(playlist.description)
     if not dry_run:
         spotify_client.change_playlist_details(
@@ -279,7 +279,7 @@ def add_timestamp_to_desc(
             description=updated_description,
         )
     else:
-        logging.info("Playlist description not updated (dry run)")
+        logging.info("Playlist description not updated (dry run).")
 
 
 def sync(

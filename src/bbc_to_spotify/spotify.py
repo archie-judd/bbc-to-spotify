@@ -117,13 +117,11 @@ def check_access_token(func):
     def wrapper(*args, **kwargs):
         spotify: Spotify = args[0]
         if spotify.token_ts is None:
-            logging.debug("No access token. Getting one")
+            logging.debug("No access token. Getting a new one one.")
             spotify.get_new_access_token()
         elif time.time() > spotify.token_ts + spotify.access_token_timeout - 300:
-            logging.debug("Refreshing access token")
+            logging.debug("Access token out of date. getting a new one.")
             spotify.get_new_access_token()
-        else:
-            logging.debug("Access token in date")
 
         res = func(*args, **kwargs)
 
@@ -149,7 +147,7 @@ class Spotify:
             logging.error("No refresh token provided")
             raise NoRefreshTokenError(
                 "To use the grant type 'refresh_token' a valid refresh token must be"
-                " provided"
+                " provided."
             )
 
         self.client_id = client_id
@@ -190,7 +188,6 @@ class Spotify:
         return headers
 
     def get_new_access_token(self):
-        logging.debug("Getting new access_token")
         url_ext = "/api/token"
         url = urljoin(base=self.accounts_base_url, url=url_ext)
         body = GetAccessTokenBody(
@@ -271,7 +268,10 @@ class Spotify:
         response_json = response.json()
         playlist = PlaylistModel.model_validate(response_json)
         next = response_json["tracks"].get("next")
+        i = 0
         while next is not None:
+            i += 1
+            logging.debug(f"Paginating...{i}")
             response = self.api_call(
                 url=next, method="get", headers=self.authorization_headers
             )
@@ -279,6 +279,8 @@ class Spotify:
             next = response_json.get("next")
             tracks = TracksWithMetaModel.model_validate(response_json)
             playlist.tracks.items.extend(tracks.items)
+
+        logging.debug(f"{len(playlist.tracks.items)} tracks retrieved.")
 
         return playlist
 
@@ -290,7 +292,7 @@ class Spotify:
         for _track_uris in utils.batch_list(track_uris, batch_size=100):
             params = AddItemsToPlaylistParams(uris=",".join(_track_uris)).model_dump()
 
-            logging.debug(f"Adding: {params}")
+            logging.debug(f"Adding: {params}.")
 
             self.api_call(
                 url, method="post", headers=self.authorization_headers, params=params
@@ -308,7 +310,7 @@ class Spotify:
 
         for _tracks in utils.batch_list(tracks, batch_size=100):
             data = RemovePlaylistItemsBody(tracks=_tracks).model_dump()
-            logging.debug(f"Removing : {data}")
+            logging.debug(f"Removing: {data}.")
             self.api_call(
                 url=url,
                 method="delete",
@@ -345,6 +347,7 @@ class Spotify:
         self, artist: str, track_name: str, market: Optional[str] = None
     ) -> list[TrackModel]:
         query = f"artist:{artist} track:{track_name}"
+        logging.debug(f"Searching for track. Query: {query}")
         result = self.search(
             query=query,
             thing_type="track",
