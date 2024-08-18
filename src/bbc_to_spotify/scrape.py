@@ -35,7 +35,7 @@ def scrape_tracks_in_para(para: Tag) -> list[ScrapedTrack]:
     logging.debug("Collecting navigable strings.")
     navigable_strings = scrape_all_navigable_strings_in_tag(tag=para)
     for navigable_string in navigable_strings:
-        logging.info(f"Scraping navigable string: {navigable_string}")
+        logging.debug(f"Scraping navigable string: {navigable_string}")
         artist = navigable_string.text.split(" - ")[0]
         primary_artist = scrape_primary_artist(artist)
         track_name = navigable_string.text.split(" - ")[-1]
