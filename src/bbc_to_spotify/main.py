@@ -3,20 +3,23 @@ import logging
 from bbc_to_spotify.authorize import authorize, maybe_get_credentials
 from bbc_to_spotify.cli import setup_parser
 from bbc_to_spotify.sync import sync
+from bbc_to_spotify.utils import unreachable
 
 
 def get_log_level_for_verbosity(verbosity: int) -> int:
-
-    log_level = logging.WARNING
 
     if verbosity <= -2:
         log_level = logging.CRITICAL
     elif verbosity == -1:
         log_level = logging.ERROR
+    elif verbosity == 0:
+        log_level = logging.WARNING
     elif verbosity == 1:
         log_level = logging.INFO
     elif verbosity >= 2:
         log_level = logging.DEBUG
+    else:
+        unreachable()
 
     return log_level
 
