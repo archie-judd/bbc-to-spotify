@@ -1,8 +1,4 @@
-from typing import Any, Never
-
-
-def unreachable() -> Never:
-    raise RuntimeError("This code should never be reached")
+from typing import Any
 
 
 def batch_list(l: list[Any], batch_size: int) -> list[list[Any]]:
