@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Literal, Union
 
 Station = Union[
@@ -26,6 +27,24 @@ PlaylistUrl = Union[
         "https://www.bbc.co.uk/programmes/articles/z39bpDGcLXC9Sy64yz1Xgt/asian-network-playlist"
     ],
 ]
+
+
+def get_log_level_for_verbosity(verbosity: int) -> int:
+
+    if verbosity <= -2:
+        log_level = logging.CRITICAL
+    elif verbosity == -1:
+        log_level = logging.ERROR
+    elif verbosity == 0:
+        log_level = logging.WARNING
+    elif verbosity == 1:
+        log_level = logging.INFO
+    elif verbosity >= 2:
+        log_level = logging.DEBUG
+    else:
+        assert False, "unreachable"
+
+    return log_level
 
 
 def get_playlist_url(station: Station) -> PlaylistUrl:

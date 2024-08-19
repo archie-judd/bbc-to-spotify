@@ -4,24 +4,7 @@ from bbc_to_spotify.authorize import authorize, maybe_get_credentials
 from bbc_to_spotify.cli import setup_parser
 from bbc_to_spotify.playlist.create import create_playlist_and_add_tracks
 from bbc_to_spotify.playlist.update import update_playlist
-
-
-def get_log_level_for_verbosity(verbosity: int) -> int:
-
-    if verbosity <= -2:
-        log_level = logging.CRITICAL
-    elif verbosity == -1:
-        log_level = logging.ERROR
-    elif verbosity == 0:
-        log_level = logging.WARNING
-    elif verbosity == 1:
-        log_level = logging.INFO
-    elif verbosity >= 2:
-        log_level = logging.DEBUG
-    else:
-        assert False, "unreachable"
-
-    return log_level
+from bbc_to_spotify.utils import get_log_level_for_verbosity
 
 
 def main():
@@ -61,9 +44,12 @@ def main():
                 description=args.desc,
                 dry_run=args.dry_run,
             )
-            print(
-                f"New playlist successfully created. It's playlist ID is: {playlist.id}"
-            )
+            if not args.dry_run:
+                print(
+                    f"New playlist successfully created. It's playlist ID is: {playlist.id}"
+                )
+            else:
+                print("Playlist not created (dry run).")
         elif args.command == "update-playlist":
             update_playlist(
                 credentials=credentials,
@@ -74,5 +60,9 @@ def main():
                 update_description=args.update_desc,
                 dry_run=args.dry_run,
             )
+            if not args.dry_run:
+                print(f"Playlist successfully updated.")
+            else:
+                print("Playlist not updated (dry run).")
 
     logging.info("Done")

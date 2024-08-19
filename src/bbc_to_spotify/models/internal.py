@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Literal, Self, Union
+from typing import Self
 
 from bbc_to_spotify.models.spotify import (
     AlbumModel,
@@ -8,18 +8,6 @@ from bbc_to_spotify.models.spotify import (
     TrackModel,
     UserModel,
 )
-
-Station = Union[
-    Literal["radio-1"],
-    Literal["radio-1-xtra"],
-    Literal["radio-2"],
-    Literal["radio-6"],
-    Literal["bbc-asian-network"],
-]
-
-
-class PlaylistURL(str):
-    pass
 
 
 @dataclass
