@@ -1,19 +1,13 @@
 from dataclasses import dataclass
 from typing import Self
 
-from bbc_to_spotify.models.spotify import (
+from bbc_to_spotify.spotify.models.external import (
     AlbumModel,
     ArtistModel,
     PlaylistModel,
     TrackModel,
     UserModel,
 )
-
-
-@dataclass
-class ScrapedTrack:
-    name: str
-    artist: str
 
 
 @dataclass(frozen=True)

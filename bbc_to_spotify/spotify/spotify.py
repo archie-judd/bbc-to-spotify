@@ -5,8 +5,23 @@ from urllib.parse import urljoin
 
 import requests
 
-import bbc_to_spotify.models.spotify as models
-import bbc_to_spotify.utils as utils
+from bbc_to_spotify import utils
+from bbc_to_spotify.spotify.models.external import (
+    AddItemsToPlaylistBody,
+    ChangePlaylistDetailsBody,
+    CreatePlaylistBody,
+    GetAccessTokenBody,
+    GetPlaylistsResponse,
+    PlaylistMetaModel,
+    PlaylistModel,
+    RemovePlaylistItemsBody,
+    SearchParams,
+    TrackModel,
+    TrackSearchResponse,
+    TracksWithMetaModel,
+    TrackURI,
+    UserModel,
+)
 
 
 class NoRefreshTokenError(Exception):
@@ -96,7 +111,7 @@ class Spotify:
     def get_new_access_token(self):
         url_ext = "/api/token"
         url = urljoin(base=self.accounts_base_url, url=url_ext)
-        body = models.GetAccessTokenBody(
+        body = GetAccessTokenBody(
             client_id=self.client_id,
             client_secret=self.client_secret,
             grant_type=self.grant_type,
@@ -123,7 +138,7 @@ class Spotify:
         url_ext = f"{self.version}/search"
         url = urljoin(base=self.base_url, url=url_ext)
 
-        params = models.SearchParams(
+        params = SearchParams(
             q=query, type=thing_type, market=market, limit=limit
         ).model_dump(exclude_none=True)
 
@@ -137,9 +152,7 @@ class Spotify:
         return response.json()
 
     @check_access_token
-    def get_track(
-        self, track_id: str, market: Optional[str] = None
-    ) -> models.TrackModel:
+    def get_track(self, track_id: str, market: Optional[str] = None) -> TrackModel:
         url_ext = f"{self.version}/tracks/{track_id}"
         if market is not None:
             url_ext += f"?market={market}"
@@ -149,12 +162,12 @@ class Spotify:
             url=url, method="get", headers=self.authorization_headers
         )
 
-        track = models.TrackModel.model_validate(response.json())
+        track = TrackModel.model_validate(response.json())
 
         return track
 
     @check_access_token
-    def get_user_playlists(self, user_id: str) -> list[models.PlaylistMetaModel]:
+    def get_user_playlists(self, user_id: str) -> list[PlaylistMetaModel]:
         url_ext = f"{self.version}/users/{user_id}/playlists"
         url = urljoin(base=self.base_url, url=url_ext)
 
@@ -162,19 +175,19 @@ class Spotify:
             url=url, method="get", headers=self.authorization_headers
         )
 
-        playlists = models.GetPlaylistsResponse.model_validate(response.json()).items
+        playlists = GetPlaylistsResponse.model_validate(response.json()).items
 
         return playlists
 
     @check_access_token
-    def get_playlist(self, playlist_id: str) -> models.PlaylistModel:
+    def get_playlist(self, playlist_id: str) -> PlaylistModel:
         url_ext = f"{self.version}/playlists/{playlist_id}"
         url = urljoin(base=self.base_url, url=url_ext)
         response = self.api_call(
             url=url, method="get", headers=self.authorization_headers
         )
         response_json = response.json()
-        playlist = models.PlaylistModel.model_validate(response_json)
+        playlist = PlaylistModel.model_validate(response_json)
         next = response_json["tracks"].get("next")
         i = 0
         while next is not None:
@@ -185,7 +198,7 @@ class Spotify:
             )
             response_json = response.json()
             next = response_json.get("next")
-            tracks = models.TracksWithMetaModel.model_validate(response_json)
+            tracks = TracksWithMetaModel.model_validate(response_json)
             playlist.tracks.items.extend(tracks.items)
 
         logging.debug(f"{len(playlist.tracks.items)} tracks retrieved.")
@@ -198,9 +211,7 @@ class Spotify:
         url = urljoin(base=self.base_url, url=url_ext)
 
         for _track_uris in utils.batch_list(track_uris, batch_size=100):
-            params = models.AddItemsToPlaylistBody(
-                uris=",".join(_track_uris)
-            ).model_dump()
+            params = AddItemsToPlaylistBody(uris=",".join(_track_uris)).model_dump()
 
             logging.debug(f"Adding: {params}.")
 
@@ -213,10 +224,10 @@ class Spotify:
         url_ext = f"{self.version}/playlists/{playlist_id}/tracks"
         url = urljoin(base=self.base_url, url=url_ext)
 
-        tracks = [models.TrackURI(uri=uri) for uri in track_uris]
+        tracks = [TrackURI(uri=uri) for uri in track_uris]
 
         for _tracks in utils.batch_list(tracks, batch_size=100):
-            body = models.RemovePlaylistItemsBody(tracks=_tracks).model_dump()
+            body = RemovePlaylistItemsBody(tracks=_tracks).model_dump()
             logging.debug(f"Removing: {body}.")
             self.api_call(
                 url=url,
@@ -237,7 +248,7 @@ class Spotify:
         url_ext = f"{self.version}/playlists/{playlist_id}"
         url = urljoin(base=self.base_url, url=url_ext)
 
-        body = models.ChangePlaylistDetailsBody(
+        body = ChangePlaylistDetailsBody(
             name=name,
             public=public,
             collaborative=collaborative,
@@ -249,7 +260,7 @@ class Spotify:
     @check_access_token
     def search_for_track_by_artist_and_track_name(
         self, artist: str, track_name: str, market: Optional[str] = None
-    ) -> list[models.TrackModel]:
+    ) -> list[TrackModel]:
         query = f"artist:{artist} track:{track_name}"
 
         logging.debug(f"Searching for track. Query: {query}")
@@ -259,7 +270,7 @@ class Spotify:
             market=market,
         )
 
-        track_search_response = models.TrackSearchResponse.model_validate(result)
+        track_search_response = TrackSearchResponse.model_validate(result)
         tracks = track_search_response.tracks.items
 
         return tracks
@@ -272,12 +283,12 @@ class Spotify:
         public: bool,
         description: str,
         collaborative: bool | None = None,
-    ) -> models.PlaylistModel:
+    ) -> PlaylistModel:
 
         url_ext = f"{self.version}/users/{user_id}/playlists"
         url = urljoin(base=self.base_url, url=url_ext)
 
-        body = models.CreatePlaylistBody(
+        body = CreatePlaylistBody(
             name=playlist_name,
             public=public,
             collaborative=collaborative,
@@ -291,12 +302,12 @@ class Spotify:
         )
 
         response_json = response.json()
-        playlist = models.PlaylistModel.model_validate(response_json)
+        playlist = PlaylistModel.model_validate(response_json)
 
         return playlist
 
     @check_access_token
-    def get_current_user_profile(self) -> models.UserModel:
+    def get_current_user_profile(self) -> UserModel:
 
         url_ext = f"{self.version}/me"
         url = urljoin(base=self.base_url, url=url_ext)
@@ -304,6 +315,6 @@ class Spotify:
         response = self.api_call(url, method="get", headers=self.authorization_headers)
 
         response_json = response.json()
-        user = models.UserModel.model_validate(response_json)
+        user = UserModel.model_validate(response_json)
 
         return user

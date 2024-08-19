@@ -1,13 +1,13 @@
 import logging
 
-from bbc_to_spotify.authorize import Credentials
-from bbc_to_spotify.models.internal import Playlist, User
+from bbc_to_spotify.authorize.models.internal import Credentials
 from bbc_to_spotify.playlist.utils import (
     Station,
     add_tracks_to_playlist,
     scrape_tracks_and_get_from_spotify,
 )
-from bbc_to_spotify.spotify import Spotify
+from bbc_to_spotify.spotify.models.internal import Playlist, User
+from bbc_to_spotify.spotify.spotify import Spotify
 
 
 def get_user(spotify_client: Spotify) -> User:

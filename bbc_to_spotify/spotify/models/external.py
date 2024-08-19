@@ -39,7 +39,7 @@ class CreatePlaylistBody(BaseModel):
     collaborative: bool | None = None
 
     @model_validator(mode="after")
-    def check_passwords_match(self) -> Self:
+    def check_not_public_and_collaborative(self) -> Self:
         if self.public and self.collaborative:
             raise ValueError("Public and collaborative cannot both be True.")
         return self

@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 from bs4.element import NavigableString, Tag
 
-from bbc_to_spotify.models.internal import ScrapedTrack
+from bbc_to_spotify.scraping.models import ScrapedTrack
 from bbc_to_spotify.utils import PlaylistUrl
 
 

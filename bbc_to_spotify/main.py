@@ -1,6 +1,6 @@
 import logging
 
-from bbc_to_spotify.authorize import authorize, maybe_get_credentials
+from bbc_to_spotify.authorize.authorize import authorize, maybe_get_credentials
 from bbc_to_spotify.cli import setup_parser
 from bbc_to_spotify.playlist.create import create_playlist_and_add_tracks
 from bbc_to_spotify.playlist.update import update_playlist

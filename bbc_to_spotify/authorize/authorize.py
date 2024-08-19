@@ -1,12 +1,19 @@
 import logging
 import os
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal
 from urllib.parse import urljoin
 
 import requests
-from pydantic import BaseModel, ValidationError
+from pydantic import ValidationError
+
+from bbc_to_spotify.authorize.models.external import (
+    CredentialsModel,
+    Environment,
+    GetAuthenticationCodeParams,
+    GetRefreshTokenRequestBody,
+    GetRefreshTokenResponseBody,
+)
+from bbc_to_spotify.authorize.models.internal import Credentials
 
 SCOPE = "playlist-modify-public playlist-modify-private"
 ACCOUNTS_BASE_URL = "https://accounts.spotify.com"
@@ -16,48 +23,6 @@ CREDENTIALS_PATH = Path(os.path.expanduser("~"), ".bbc-to-spotify", "credentials
 
 class ParseCredentialsError(Exception):
     pass
-
-
-class Environment(BaseModel):
-    SPOTIFY_CLIENT_ID: str
-    SPOTIFY_CLIENT_SECRET: str
-    SPOTIFY_REFRESH_TOKEN: str
-
-
-class CredentialsWire(BaseModel):
-    client_id: str
-    client_secret: str
-    refresh_token: str
-
-
-@dataclass
-class Credentials:
-    client_id: str
-    client_secret: str
-    refresh_token: str
-
-
-class GetRefreshTokenResponseBody(BaseModel):
-    access_token: str
-    expires_in: int
-    refresh_token: str
-    scope: str
-    token_type: str
-
-
-class GetAuthenticationCodeParams(BaseModel):
-    client_id: str
-    redirect_uri: str
-    scope: str
-    response_type: Literal["code"] = "code"
-
-
-class GetRefreshTokenRequestBody(BaseModel):
-    code: str
-    client_id: str
-    client_secret: str
-    redirect_uri: str
-    grant_type: Literal["authorization_code"] = "authorization_code"
 
 
 def write_credentials_file(path: Path | str, credentials: Credentials):
@@ -76,12 +41,8 @@ def maybe_read_credentials_file(path: Path | str) -> Credentials | None:
     try:
         with open(path, "r") as file:
             try:
-                credentials_wire = CredentialsWire.model_validate_json(file.read())
-                credentials = Credentials(
-                    client_id=credentials_wire.client_id,
-                    client_secret=credentials_wire.client_secret,
-                    refresh_token=credentials_wire.refresh_token,
-                )
+                credentials_model = CredentialsModel.model_validate_json(file.read())
+                credentials = Credentials.from_external(credentials_model)
             except Exception as e:
                 logging.error("Error parsing credentials file.")
                 raise ParseCredentialsError(

@@ -1,13 +1,12 @@
 import logging
 import re
 
-from bbc_to_spotify.models.internal import Playlist, Track
-from bbc_to_spotify.scraping import scrape_tracks_from_playlist_page
-from bbc_to_spotify.spotify import Spotify
+from bbc_to_spotify.scraping.scraping import scrape_tracks_from_playlist_page
+from bbc_to_spotify.spotify.models.internal import Playlist, Track
+from bbc_to_spotify.spotify.spotify import Spotify
 from bbc_to_spotify.utils import Station, get_playlist_url
 
 SPECIAL_CHARACTERS_PATTEN = r"[^ \w+-.]"
-# match trailing, leading, or spaces succeeded by another space
 WHITESPACE_PATTERN = r"^\s+|\s$|\s+(?=\s)"
 FEATURED_PATTERN = r"feat.*|ft.*|featuring.*"
 

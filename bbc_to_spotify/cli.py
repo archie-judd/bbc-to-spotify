@@ -2,7 +2,7 @@ import argparse
 from argparse import ArgumentParser
 
 from bbc_to_spotify import __project_name__, __version__
-from bbc_to_spotify.authorize import REDIRECT_URI
+from bbc_to_spotify.authorize.authorize import REDIRECT_URI
 from bbc_to_spotify.utils import Station
 
 SOURCES: list[Station] = [
