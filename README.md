@@ -1,6 +1,6 @@
 # BBC to Spotify
 
-A CLI tool for syncing songs from BBC radio playlists to Spotify, written in python and packaged with nix.
+A CLI tool for adding songs from BBC radio playlists to Spotify, written in python and packaged with nix.
 
 ## Contents
 
@@ -13,7 +13,8 @@ A CLI tool for syncing songs from BBC radio playlists to Spotify, written in pyt
     * [Authorize the CLI](#authorize-the-cli)
 * [Usage](#usage)
     * [Authorize](#authorize)
-    * [Sync](#sync)
+    * [Creating a playlist](#creating-a-playlist)
+    * [Updating a playlist](#updating-a-playlist)
 * [FAQ](#faq)
     * [How can I find a playlist's ID?](#how-can-i-find-a-playlists-id)
     * [I don't want to store my credentials. Can I still use the CLI?](#i-dont-want-to-store-my-credentials-can-i-still-use-the-cli)
@@ -98,11 +99,11 @@ bbc-to-spotify <command> [parameters]
 
 Run `bbc-to-spotify <command> -h` for information on a specific command.
 
-The available commands are: `authorize`, `sync`.
+The available commands are: `authorize`, `create-playlist` and `update-playlist`.
 
 ### Authorize
 
-Authorize runs to authorization process which generates credentials that will be needed to run the `sync` command.
+Authorize runs to authorization process which generates credentials that will be needed to run the `create-playlist` and `update-playlist` commands.
 
 ```
 bbc-to-spotify authorize [options]
@@ -126,12 +127,63 @@ bbc-to-spotify authorize [options]
 
 > Write logs to this file. Suppresses logging in stdout.
 
-### Sync
+### Creating a playlist
 
-Sync is used to collect songs from a BBC radio station's current playlist, and add them to a user-defined Spotify playlist.
+`create-playlist` is used to create a new Spotify playlist with songs from a BBC radio station's current playlist.
 
 ```
-bbc-to-spotify sync <playlist-id> <source> [options]
+bbc-to-spotify create-playlist <name> <source> [options]
+```
+
+**Required arguments**
+
+`name` (string):
+
+> The name of the playlist to be created.
+
+`source` (string):
+
+> The BBC Radio station whose current playlist should be added to the Spotify playlist.
+>
+> Possible values:\
+> `radio-1`\
+> `radio-1-xtra`\
+> `radio-2`\
+> `radio-6`\
+> `bbc-asian-network`
+
+**Options**
+
+`--dry-run` `-n` (flag):
+
+> Run the command but do not create the destination playlist.
+
+`--private`, `-p` (flag):
+
+> Make the playlist private rather than public.
+
+`--desc <description>` (string):
+
+> The description to add to the destination playlist.
+
+`--verbose`, `-v` (flag):
+
+> Increase logging verbosity (`-vv` to increase further).
+
+`--quiet`, `-q` (flag):
+
+> Decrease logging verbosity (`-qq` to decrease further).
+
+`--log-file <filepath>` (string):
+
+> Write logs to this file. Suppresses logging in stdout.
+
+### Updating a playlist
+
+`update-playlist` is used to update an existing Spotify playlist with songs from a BBC radio station's current playlist.
+
+```
+bbc-to-spotify update-playlist <playlist-id> <source> [options]
 ```
 
 **Required arguments**
@@ -155,7 +207,7 @@ bbc-to-spotify sync <playlist-id> <source> [options]
 
 `--dry-run` `-n` (flag):
 
-> Do not update the destination playlist.
+> Run the command but do not update the destination playlist.
 
 `--no-dups` `-N` (flag):
 
@@ -185,13 +237,15 @@ bbc-to-spotify sync <playlist-id> <source> [options]
 
 ### How can I find a playlist's ID?
 
-You can get a Spotify playlist ID by clicking `...` on the playlist's page, and then clicking `Copy link to playlist` under the `Share` menu.
+The playlists ID should be printed out after successfully executing the create-playlist command.
+
+Alternatively you can get a Spotify playlist ID by clicking `...` on the playlist's page, and then clicking `Copy link to playlist` under the `Share` menu.
 
 This will give you a full playlist link that looks like the following:
 
 `https://open.spotify.com/playlist/37i9dQZF1DWXRqgorJj26U?si=9f6A6U2jTk-njyZJ64rk3g`
 
-The playlist ID is the code after `playlist/` and before `?si` (`37i9dQZF1DWXRqgorJj26U`) .
+The playlist ID is the code after `playlist/` and before `?si` (`37i9dQZF1DWXRqgorJj26U`).
 
 ### I don't want to store my credentials. Can I still use the CLI?
 

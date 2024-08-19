@@ -1,17 +1,11 @@
 import logging
-from dataclasses import dataclass
 
 import requests
 from bs4 import BeautifulSoup as bs
 from bs4.element import NavigableString, Tag
 
-from bbc_to_spotify.station import PlaylistURL
-
-
-@dataclass
-class ScrapedTrack:
-    name: str
-    artist: str
+from bbc_to_spotify.models.internal import ScrapedTrack
+from bbc_to_spotify.utils import PlaylistUrl
 
 
 def scrape_primary_artist(artist: str) -> str:
@@ -53,7 +47,7 @@ def scrape_tracks_in_section(section: Tag) -> list[ScrapedTrack]:
     return scraped_tracks
 
 
-def scrape_tracks_from_playlist_page(playlist_url: PlaylistURL) -> list[ScrapedTrack]:
+def scrape_tracks_from_playlist_page(playlist_url: PlaylistUrl) -> list[ScrapedTrack]:
 
     scraped_tracks: list[ScrapedTrack] = []
 

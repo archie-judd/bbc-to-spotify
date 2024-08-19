@@ -206,14 +206,15 @@ def maybe_write_credentials(credentials: Credentials):
         write_credentials_file(path=CREDENTIALS_PATH, credentials=credentials)
         print(
             "\nCredentials successfully written credentials here:"
-            f" {CREDENTIALS_PATH}.\n\nYou can now add songs to spotify using the `sync`"
-            " command."
+            f" {CREDENTIALS_PATH}.\n\nYou can now use the 'create-playlist' and "
+            "'update-playlist' commands"
         )
     else:
         print(
-            "\nCredentials not stored. To use the 'sync' command please set the"
-            " following environment variables before use: SPOTIFY_CLIENT_ID,"
-            " SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN."
+            "\nCredentials not stored. To use the 'create-playlist' or "
+            "'update-playlist' commands please set the following environment "
+            "variables before use: SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, "
+            "SPOTIFY_REFRESH_TOKEN."
         )
 
 

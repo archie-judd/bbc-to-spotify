@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 
 from bbc_to_spotify import __project_name__, __version__
 from bbc_to_spotify.authorize import REDIRECT_URI
-from bbc_to_spotify.station import Station
+from bbc_to_spotify.utils import Station
 
 SOURCES: list[Station] = [
     "radio-1",
@@ -53,11 +53,20 @@ def setup_parser() -> ArgumentParser:
     command_parsers = root_parser.add_subparsers(
         title="commands", dest="command", required=True
     )
-
-    sync_parser = command_parsers.add_parser(
-        "sync", add_help=True, parents=[logging_parser]
+    update_parser = command_parsers.add_parser(
+        "update-playlist",
+        add_help=True,
+        parents=[logging_parser],
+        description="Create a new Spotify playlist with songs from a BBC radio station's current playlist.",
     )
-    sync_parser.add_argument(
+    create_parser = command_parsers.add_parser(
+        "create-playlist",
+        add_help=True,
+        parents=[logging_parser],
+        description="Update an existing Spotify playlist with songs from a BBC radio station's current playlist.",
+    )
+
+    update_parser.add_argument(
         "playlist_id",
         metavar="playlist-id",
         help=(
@@ -66,8 +75,7 @@ def setup_parser() -> ArgumentParser:
         ),
         type=str,
     )
-
-    sync_parser.add_argument(
+    update_parser.add_argument(
         "source",
         help=(
             "The BBC Radio station whose current playlist should be added to the"
@@ -77,7 +85,7 @@ def setup_parser() -> ArgumentParser:
         metavar="source",
         type=str,
     )
-    sync_parser.add_argument(
+    update_parser.add_argument(
         "--prune",
         "-p",
         help=(
@@ -86,24 +94,59 @@ def setup_parser() -> ArgumentParser:
         required=False,
         action="store_true",
     )
-    sync_parser.add_argument(
+    update_parser.add_argument(
         "--no-dups",
         "-N",
         help="Only add tracks that are not already in the destination playlist.",
         required=False,
         action="store_true",
     )
-    sync_parser.add_argument(
+    update_parser.add_argument(
         "--update-desc",
         "-u",
         help="Add a 'Last updated' timestamp to the destination playlist desription.",
         required=False,
         action="store_true",
     )
-    sync_parser.add_argument(
+    update_parser.add_argument(
         "--dry-run",
         "-n",
-        help="Do not update the destination playlist.",
+        help="Run the command but do not update the destination playlist.",
+        required=False,
+        action="store_true",
+    )
+
+    create_parser.add_argument(
+        "name",
+        help="The name of the playlist to be created.",
+    )
+    create_parser.add_argument(
+        "source",
+        help=(
+            "The BBC Radio station whose current playlist should be added to the"
+            f" Spotify playlist. Possible values: {SOURCES}"
+        ),
+        choices=SOURCES,
+        metavar="source",
+        type=str,
+    )
+    create_parser.add_argument(
+        "--private",
+        "-p",
+        help="Make the playlist private rather than public.",
+        required=False,
+        action="store_true",
+    )
+    create_parser.add_argument(
+        "--desc",
+        help="Run the command but do not create the playlist.",
+        required=False,
+        type=str,
+    )
+    create_parser.add_argument(
+        "--dry-run",
+        "-n",
+        help="Run the update command but do not create the playlist.",
         required=False,
         action="store_true",
     )

@@ -2,7 +2,8 @@ import logging
 
 from bbc_to_spotify.authorize import authorize, maybe_get_credentials
 from bbc_to_spotify.cli import setup_parser
-from bbc_to_spotify.sync import sync
+from bbc_to_spotify.playlist.create import create_playlist_and_add_tracks
+from bbc_to_spotify.playlist.update import update_playlist
 
 
 def get_log_level_for_verbosity(verbosity: int) -> int:
@@ -43,7 +44,7 @@ def main():
 
     if args.command == "authorize":
         authorize(redirect_uri=args.redirect_uri)
-    elif args.command == "sync":
+    else:
         credentials = maybe_get_credentials()
         if credentials is None:
             print(
@@ -51,8 +52,20 @@ def main():
                 "credentials, or alternatively set the environment variables "
                 "SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN."
             )
-        else:
-            sync(
+        elif args.command == "create-playlist":
+            playlist = create_playlist_and_add_tracks(
+                credentials=credentials,
+                source=args.source,
+                playlist_name=args.name,
+                private=args.private,
+                description=args.desc,
+                dry_run=args.dry_run,
+            )
+            print(
+                f"New playlist successfully created. It's playlist ID is: {playlist.id}"
+            )
+        elif args.command == "update-playlist":
+            update_playlist(
                 credentials=credentials,
                 playlist_id=args.playlist_id,
                 source=args.source,
