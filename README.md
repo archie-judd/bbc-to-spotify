@@ -12,7 +12,7 @@ A CLI tool for adding songs from BBC radio playlists to Spotify, written in pyth
     * [Create a Spotify app](#create-a-spotify-app)
     * [Authorize the CLI](#authorize-the-cli)
 * [Usage](#usage)
-    * [Authorize](#authorize)
+    * [Authorization](#authorization)
     * [Creating a playlist](#creating-a-playlist)
     * [Updating a playlist](#updating-a-playlist)
 * [FAQ](#faq)
@@ -101,9 +101,9 @@ Run `bbc-to-spotify <command> -h` for information on a specific command.
 
 The available commands are: `authorize`, `create-playlist` and `update-playlist`.
 
-### Authorize
+### Authorization
 
-Authorize runs to authorization process which generates credentials that will be needed to run the `create-playlist` and `update-playlist` commands.
+`authorize` runs the authorization process to generate credentials that will be needed to run the `create-playlist` and `update-playlist` commands.
 
 ```
 bbc-to-spotify authorize [options]
