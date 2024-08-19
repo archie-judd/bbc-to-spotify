@@ -94,7 +94,7 @@ You will then be taken through the steps to generate a refresh token, and asked 
 CLI commands take the following format.
 
 ```
-bbc-to-spotify <command> [parameters]
+bbc-to-spotify <command> [arguments]
 ```
 
 Run `bbc-to-spotify <command> -h` for information on a specific command.
