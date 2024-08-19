@@ -31,7 +31,10 @@ def make_updated_playlist_description(description: str) -> str:
         new_description = re.sub(pattern=PATTERN, repl=ts, string=description, count=1)
     else:
         logging.debug("No 'Last updated' timestamp found. Appending to description.")
-        new_description = description + f" Last updated: {ts}"
+        if description == "":
+            new_description = f"Last updated: {ts}"
+        else:
+            new_description = description + f" Last updated: {ts}"
 
     return new_description
 
