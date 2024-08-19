@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bbc-to-spotify"
-version = "0.0.5"
+version = "0.0.6"
 description = "A CLI tool for adding the BBC radio playlist tracks to Spotify playlists."
 authors = ["Archie Judd"]
 readme = "README.md"
