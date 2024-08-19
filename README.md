@@ -81,7 +81,7 @@ Start the authorization helper by running:
 bbc-to-spotify authorize
 ```
 
-> See [Authorize](#authorize) for help on the authorize command.
+> See [Authorization](#authorization) for help on the authorize command.
 
 You will be prompted for your client ID and client secret. You can copy them from your app's page.
 
@@ -237,7 +237,7 @@ bbc-to-spotify update-playlist <playlist-id> <source> [options]
 
 ### How can I find a playlist's ID?
 
-The playlists ID should be printed out after successfully executing the create-playlist command.
+The playlists ID should be printed out after successfully executing the `create-playlist` command.
 
 Alternatively you can get a Spotify playlist ID by clicking `...` on the playlist's page, and then clicking `Copy link to playlist` under the `Share` menu.
 
