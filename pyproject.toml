@@ -4,7 +4,7 @@ version = "0.0.5"
 description = "A CLI tool for adding the BBC radio playlist tracks to Spotify playlists."
 authors = ["Archie Judd"]
 readme = "README.md"
-packages = [{include = "bbc_to_spotify", from = "src"}]
+packages = [{include = "bbc_to_spotify"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
