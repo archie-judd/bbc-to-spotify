@@ -31,10 +31,7 @@ def make_updated_playlist_description(description: str) -> str:
         new_description = re.sub(pattern=PATTERN, repl=ts, string=description, count=1)
     else:
         logging.debug("No 'Last updated' timestamp found. Appending to description.")
-        if description == "":
-            new_description = f"Last updated: {ts}"
-        else:
-            new_description = description + f" Last updated: {ts}"
+        new_description = description + f" Last updated: {ts}"
 
     return new_description
 
@@ -43,11 +40,17 @@ def add_timestamp_to_desc(
     spotify_client: Spotify, playlist: Playlist, dry_run: bool = False
 ):
     logging.info("Updating playlist description.")
-    updated_description = make_updated_playlist_description(playlist.description)
+    if playlist.description:
+        description = make_updated_playlist_description(playlist.description)
+    else:
+        ts = dt.datetime.now(tz=ZoneInfo("Europe/London")).strftime(
+            "%d-%m-%Y %H:%M:%S (%Z)"
+        )
+        description = f"Last updated: {ts}"
     if not dry_run:
         spotify_client.change_playlist_details(
             playlist_id=playlist.id,
-            description=updated_description,
+            description=description,
         )
     else:
         logging.info("Playlist description not updated (dry run).")

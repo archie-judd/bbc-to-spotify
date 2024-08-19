@@ -8,18 +8,26 @@ from bbc_to_spotify.utils import Station, get_playlist_url
 
 SPECIAL_CHARACTERS_PATTEN = r"[^ \w+-.]"
 # match trailing, leading, or spaces succeeded by another space
-STRIP_WHITESPACE_PATTERN = r"^\s+|\s$|\s+(?=\s)"
+WHITESPACE_PATTERN = r"^\s+|\s$|\s+(?=\s)"
+FEATURED_PATTERN = r"feat.*|ft.*|featuring.*"
 
 
-def has_special_characters(string: str) -> bool:
-    res = re.search(pattern=SPECIAL_CHARACTERS_PATTEN, string=string)
-    has = bool(res)
-    return has
+def is_simple_track_or_artist(string: str) -> bool:
+    special_chars_match = re.search(pattern=SPECIAL_CHARACTERS_PATTEN, string=string)
+    whitespace_match = re.search(pattern=WHITESPACE_PATTERN, string=string)
+    featured_match = re.search(pattern=FEATURED_PATTERN, string=string)
+    is_simple_string = (
+        special_chars_match is None
+        and whitespace_match is None
+        and featured_match is None
+    )
+    return is_simple_string
 
 
-def remove_special_characters_and_strip_whitespace(string: str) -> str:
+def simplify_track_or_artist(string: str) -> str:
     string = re.sub(pattern=SPECIAL_CHARACTERS_PATTEN, repl="", string=string)
-    string = re.sub(pattern=STRIP_WHITESPACE_PATTERN, repl="", string=string)
+    string = re.sub(pattern=FEATURED_PATTERN, repl="", string=string)
+    string = re.sub(pattern=WHITESPACE_PATTERN, repl="", string=string)
     return string
 
 
@@ -41,10 +49,16 @@ def get_tracks_by_artist_and_track_name(
 
     if not track_models and (
         retry_without_special_characters
-        and (has_special_characters(artist) or has_special_characters(track_name))
+        and (
+            not is_simple_track_or_artist(artist)
+            or not is_simple_track_or_artist(track_name)
+        )
     ):
-        artist_ = remove_special_characters_and_strip_whitespace(artist)
-        track_name_ = remove_special_characters_and_strip_whitespace(track_name)
+        logging.debug(
+            "Could not find track. Retrying with simplified artist and track names."
+        )
+        artist_ = simplify_track_or_artist(artist)
+        track_name_ = simplify_track_or_artist(track_name)
         track_models = spotify_client.search_for_track_by_artist_and_track_name(
             artist=artist_, track_name=track_name_
         )
@@ -94,12 +108,12 @@ def add_tracks_to_playlist(
 
     if remove_duplicates:
         duplicates = set(source_tracks).intersection(set(dest_tracks))
-        tracks_to_add = list(set(source_tracks).difference(duplicates))
+        tracks_to_add = set(source_tracks).difference(duplicates)
     else:
-        tracks_to_add = source_tracks
+        tracks_to_add = set(source_tracks)
 
     if tracks_to_add:
-        logging.info(f"Addings these tracks: {[track.name for track in source_tracks]}")
+        logging.info(f"Addings these tracks: {[track.name for track in tracks_to_add]}")
         if not dry_run:
             spotify_client.add_to_playlist(
                 playlist_id=playlist_id,
