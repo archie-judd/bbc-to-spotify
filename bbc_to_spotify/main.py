@@ -46,7 +46,7 @@ def main():
             )
             if not args.dry_run:
                 print(
-                    f"New playlist successfully created. It's playlist ID is: {playlist.id}"
+                    f"New playlist successfully created. Its playlist ID is: {playlist.id}"
                 )
             else:
                 print("Playlist not created (dry run).")
