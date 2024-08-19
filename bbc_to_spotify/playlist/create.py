@@ -81,8 +81,6 @@ def create_playlist_and_add_tracks(
         dry_run=dry_run,
     )
 
-    print(dest_playlist)
-
     add_tracks_to_playlist(
         spotify_client=spotify_client,
         playlist_id=dest_playlist.id,
