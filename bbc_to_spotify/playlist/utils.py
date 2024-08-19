@@ -76,6 +76,7 @@ def scrape_tracks_and_get_from_spotify(
                 key=lambda x: (x.popularity, x.id),
                 reverse=True,  # make deterministic
             )
+            logging.info(f"Successfully found track on Spotify: {scraped_track}")
             spotify_radio_6_tracks.append(tracks[0])
         else:
             logging.warning(f"Could not find track on Spotify: {scraped_track}")
