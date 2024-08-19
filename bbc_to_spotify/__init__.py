@@ -1,2 +1,2 @@
 __project_name__ = "bbc-to-spotify"
-__version__ = "0.0.6"
+__version__ = "0.0.7"
