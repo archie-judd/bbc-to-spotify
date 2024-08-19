@@ -1,6 +1,5 @@
 import logging
 import re
-from typing import Any
 
 from bbc_to_spotify.models.internal import Playlist, Track
 from bbc_to_spotify.scraping import scrape_tracks_from_playlist_page
