@@ -93,21 +93,21 @@ class TracksModel(BaseModel):
 
 class PlaylistMetaModel(BaseModel):
     collaborative: bool
-    description: str
     name: str
     public: bool
     uri: str
     id: str
+    description: str | None = None
 
 
 class PlaylistModel(PlaylistMetaModel):
     tracks: TracksWithMetaModel
     collaborative: bool
-    description: str
     name: str
     public: bool
     uri: str
     id: str
+    description: str | None = None
 
 
 class GetPlaylistsResponse(BaseModel):

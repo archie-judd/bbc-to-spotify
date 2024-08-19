@@ -141,6 +141,7 @@ def setup_parser() -> ArgumentParser:
         "--desc",
         help="Run the command but do not create the playlist.",
         required=False,
+        default=None,
         type=str,
     )
     create_parser.add_argument(

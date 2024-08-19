@@ -103,11 +103,11 @@ class Track:
 class Playlist:
     tracks: list[Track]
     collaborative: bool
-    description: str
     name: str
     public: bool
     uri: str
     id: str
+    description: str | None = None
 
     @classmethod
     def from_external(cls, playlist_model: PlaylistModel) -> Self:
