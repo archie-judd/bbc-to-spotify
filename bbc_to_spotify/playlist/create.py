@@ -9,6 +9,8 @@ from bbc_to_spotify.playlist.utils import (
 from bbc_to_spotify.spotify.models.internal import Playlist, User
 from bbc_to_spotify.spotify.spotify import Spotify
 
+logger = logging.getLogger(__name__)
+
 
 def get_user(spotify_client: Spotify) -> User:
     user_model = spotify_client.get_current_user_profile()
@@ -25,7 +27,7 @@ def create_playlist(
     dry_run: bool,
 ) -> Playlist:
 
-    logging.info(f"Creating playlist {playlist_name}.")
+    logger.info(f"Creating playlist {playlist_name}.")
 
     if not dry_run:
         playlist_model = spotify_client.create_playlist(
@@ -45,7 +47,7 @@ def create_playlist(
             uri="",
             id="",
         )
-        logging.info(f"No playlist created (dry run)")
+        logger.info(f"No playlist created (dry run)")
 
     return playlist
 

@@ -6,6 +6,8 @@ from bbc_to_spotify.spotify.models.internal import Playlist, Track
 from bbc_to_spotify.spotify.spotify import Spotify
 from bbc_to_spotify.utils import Station, get_playlist_url
 
+logger = logging.getLogger(__name__)
+
 SPECIAL_CHARACTERS_PATTEN = r"[^ \w+-.]"
 WHITESPACE_PATTERN = r"^\s+|\s$|\s+(?=\s)"
 FEATURED_PATTERN = r"feat.*|ft.*|featuring.*"
@@ -53,7 +55,7 @@ def get_tracks_by_artist_and_track_name(
             or not is_simple_track_or_artist(track_name)
         )
     ):
-        logging.debug(
+        logger.debug(
             "Could not find track. Retrying with simplified artist and track names."
         )
         artist_ = simplify_track_or_artist(artist)
@@ -88,10 +90,10 @@ def scrape_tracks_and_get_from_spotify(
                 key=lambda x: (x.popularity, x.id),
                 reverse=True,  # make deterministic
             )
-            logging.info(f"Successfully found track on Spotify: {scraped_track}")
+            logger.info(f"Successfully found track on Spotify: {scraped_track}")
             spotify_radio_6_tracks.append(tracks[0])
         else:
-            logging.warning(f"Could not find track on Spotify: {scraped_track}")
+            logger.warning(f"Could not find track on Spotify: {scraped_track}")
 
     return spotify_radio_6_tracks
 
@@ -112,13 +114,13 @@ def add_tracks_to_playlist(
         tracks_to_add = set(source_tracks)
 
     if tracks_to_add:
-        logging.info(f"Addings these tracks: {[track.name for track in tracks_to_add]}")
+        logger.info(f"Addings these tracks: {[track.name for track in tracks_to_add]}")
         if not dry_run:
             spotify_client.add_to_playlist(
                 playlist_id=playlist_id,
                 track_uris=[track.uri for track in tracks_to_add],
             )
         else:
-            logging.info("No tracks added (dry run).")
+            logger.info("No tracks added (dry run).")
     else:
-        logging.info(f"No tracks to add.")
+        logger.info(f"No tracks to add.")

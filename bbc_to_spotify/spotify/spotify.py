@@ -23,6 +23,8 @@ from bbc_to_spotify.spotify.models.external import (
     UserModel,
 )
 
+logger = logging.getLogger(__name__)
+
 
 class NoRefreshTokenError(Exception):
     pass
@@ -32,10 +34,10 @@ def check_access_token(func):
     def wrapper(*args, **kwargs):
         spotify: Spotify = args[0]
         if spotify.token_ts is None:
-            logging.debug("No access token. Getting a new one one.")
+            logger.debug("No access token. Getting a new one one.")
             spotify.get_new_access_token()
         elif time.time() > spotify.token_ts + spotify.access_token_timeout - 300:
-            logging.debug("Access token out of date. getting a new one.")
+            logger.debug("Access token out of date. getting a new one.")
             spotify.get_new_access_token()
 
         res = func(*args, **kwargs)
@@ -60,7 +62,7 @@ class Spotify:
         refresh_token: str | None = None,
     ):
         if grant_type == "refresh_token" and refresh_token is None:
-            logging.error("No refresh token provided")
+            logger.error("No refresh token provided")
             raise NoRefreshTokenError(
                 "To use the grant type 'refresh_token' a valid refresh token must be"
                 " provided."
@@ -99,7 +101,7 @@ class Spotify:
         try:
             response.raise_for_status()
         except Exception as e:
-            logging.error(response.json())
+            logger.error(response.json())
             raise e
         return response
 
@@ -192,7 +194,7 @@ class Spotify:
         i = 0
         while next is not None:
             i += 1
-            logging.debug(f"Paginating...{i}")
+            logger.debug(f"Paginating...{i}")
             response = self.api_call(
                 url=next, method="get", headers=self.authorization_headers
             )
@@ -201,7 +203,7 @@ class Spotify:
             tracks = TracksWithMetaModel.model_validate(response_json)
             playlist.tracks.items.extend(tracks.items)
 
-        logging.debug(f"{len(playlist.tracks.items)} tracks retrieved.")
+        logger.debug(f"{len(playlist.tracks.items)} tracks retrieved.")
 
         return playlist
 
@@ -213,7 +215,7 @@ class Spotify:
         for _track_uris in utils.batch_list(track_uris, batch_size=100):
             params = AddItemsToPlaylistBody(uris=",".join(_track_uris)).model_dump()
 
-            logging.debug(f"Adding: {params}.")
+            logger.debug(f"Adding: {params}.")
 
             self.api_call(
                 url, method="post", headers=self.authorization_headers, params=params
@@ -228,7 +230,7 @@ class Spotify:
 
         for _tracks in utils.batch_list(tracks, batch_size=100):
             body = RemovePlaylistItemsBody(tracks=_tracks).model_dump()
-            logging.debug(f"Removing: {body}.")
+            logger.debug(f"Removing: {body}.")
             self.api_call(
                 url=url,
                 method="delete",
@@ -263,7 +265,7 @@ class Spotify:
     ) -> list[TrackModel]:
         query = f"artist:{artist} track:{track_name}"
 
-        logging.debug(f"Searching for track. Query: {query}")
+        logger.debug(f"Searching for track. Query: {query}")
         result = self.search(
             query=query,
             thing_type="track",
@@ -295,7 +297,7 @@ class Spotify:
             description=description,
         ).model_dump(exclude_none=True)
 
-        logging.debug(f"Creating playlist: {body}")
+        logger.debug(f"Creating playlist: {body}")
 
         response = self.api_call(
             url, method="post", headers=self.authorization_headers, json=body

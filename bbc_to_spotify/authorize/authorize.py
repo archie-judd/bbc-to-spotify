@@ -15,6 +15,8 @@ from bbc_to_spotify.authorize.models.external import (
 )
 from bbc_to_spotify.authorize.models.internal import Credentials
 
+logger = logging.getLogger(__name__)
+
 SCOPE = "playlist-modify-public playlist-modify-private"
 ACCOUNTS_BASE_URL = "https://accounts.spotify.com"
 REDIRECT_URI = "http://localhost:8080/bbc-to-spotify"
@@ -44,12 +46,12 @@ def maybe_read_credentials_file(path: Path | str) -> Credentials | None:
                 credentials_model = CredentialsModel.model_validate_json(file.read())
                 credentials = Credentials.from_external(credentials_model)
             except Exception as e:
-                logging.error("Error parsing credentials file.")
+                logger.error("Error parsing credentials file.")
                 raise ParseCredentialsError(
                     f"Could not parse credentials file at {str(path)}. Exception: {e}"
                 )
     except FileNotFoundError as e:
-        logging.debug("No credentials file found.")
+        logger.debug("No credentials file found.")
         credentials = None
 
     return credentials
@@ -57,7 +59,7 @@ def maybe_read_credentials_file(path: Path | str) -> Credentials | None:
 
 def maybe_get_credentials() -> Credentials | None:
 
-    logging.info("Getting credentials.")
+    logger.info("Getting credentials.")
 
     credentials = None
     try:
@@ -67,16 +69,16 @@ def maybe_get_credentials() -> Credentials | None:
             client_secret=environment.SPOTIFY_CLIENT_SECRET,
             refresh_token=environment.SPOTIFY_REFRESH_TOKEN,
         )
-        logging.info("Successfully read credentials from environment variables.")
+        logger.info("Successfully read credentials from environment variables.")
     except ValidationError:
-        logging.debug(
+        logger.debug(
             "Environment variable credentials not found. Checking for credentials file."
         )
         credentials = maybe_read_credentials_file(CREDENTIALS_PATH)
         if credentials is None:
-            logging.debug("Credentials file not found.")
+            logger.debug("Credentials file not found.")
         else:
-            logging.info("Successfully read credentials from credentials file.")
+            logger.info("Successfully read credentials from credentials file.")
 
     return credentials
 

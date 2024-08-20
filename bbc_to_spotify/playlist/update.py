@@ -13,6 +13,8 @@ from bbc_to_spotify.playlist.utils import (
 from bbc_to_spotify.spotify.models.internal import Playlist, Track
 from bbc_to_spotify.spotify.spotify import Spotify
 
+logger = logging.getLogger(__name__)
+
 
 def make_updated_playlist_description(description: str) -> str:
 
@@ -20,17 +22,17 @@ def make_updated_playlist_description(description: str) -> str:
     ts = dt.datetime.now(tz=ZoneInfo("Europe/London")).strftime(
         "%d-%m-%Y %H:%M:%S (%Z)"
     )
-    logging.debug(
+    logger.debug(
         f"Searching for 'Last updated' timestamp in description: {description}"
     )
     match = re.search(pattern=PATTERN, string=description)
     if match is not None:
-        logging.debug(
+        logger.debug(
             f"Found 'Last updated' timestamp: {match}. Performing regex subsitution."
         )
         new_description = re.sub(pattern=PATTERN, repl=ts, string=description, count=1)
     else:
-        logging.debug("No 'Last updated' timestamp found. Appending to description.")
+        logger.debug("No 'Last updated' timestamp found. Appending to description.")
         new_description = description + f" Last updated: {ts}"
 
     return new_description
@@ -39,7 +41,7 @@ def make_updated_playlist_description(description: str) -> str:
 def add_timestamp_to_desc(
     spotify_client: Spotify, playlist: Playlist, dry_run: bool = False
 ):
-    logging.info("Updating playlist description.")
+    logger.info("Updating playlist description.")
     if playlist.description:
         description = make_updated_playlist_description(playlist.description)
     else:
@@ -53,7 +55,7 @@ def add_timestamp_to_desc(
             description=description,
         )
     else:
-        logging.info("Playlist description not updated (dry run).")
+        logger.info("Playlist description not updated (dry run).")
 
 
 def add_tracks_and_prune_playlist(
@@ -64,14 +66,14 @@ def add_tracks_and_prune_playlist(
     dry_run: bool,
 ):
 
-    logging.info("Pruning destination playlist.")
+    logger.info("Pruning destination playlist.")
     # Deduplicate the destination playlist, and remove any tracks that are not in the
     # source playlist.
     tracks_to_stay = set(t for t in source_tracks if dest_tracks.count(t) == 1)
     tracks_to_remove = set(dest_tracks).difference(tracks_to_stay)
 
     if tracks_to_remove:
-        logging.info(
+        logger.info(
             f"Removing these tracks: {[track.name for track in tracks_to_remove]}"
         )
         if not dry_run:
@@ -80,9 +82,9 @@ def add_tracks_and_prune_playlist(
                 track_uris=[track.uri for track in tracks_to_remove],
             )
         else:
-            logging.info("No tracks removed (dry run).")
+            logger.info("No tracks removed (dry run).")
     else:
-        logging.info("No tracks to remove.")
+        logger.info("No tracks to remove.")
 
     # Only add tracks that are not in the remaining source tracks
     add_tracks_to_playlist(

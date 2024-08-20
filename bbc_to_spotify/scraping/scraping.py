@@ -7,6 +7,8 @@ from bs4.element import NavigableString, Tag
 from bbc_to_spotify.scraping.models import ScrapedTrack
 from bbc_to_spotify.utils import PlaylistUrl
 
+logger = logging.getLogger(__name__)
+
 
 def scrape_primary_artist(artist: str) -> str:
     artist_primary = artist.replace("&", "ft.").split("ft.")[0]
@@ -26,10 +28,10 @@ def scrape_all_navigable_strings_in_tag(tag: Tag) -> list[NavigableString]:
 
 def scrape_tracks_in_para(para: Tag) -> list[ScrapedTrack]:
     scraped_tracks: list[ScrapedTrack] = []
-    logging.debug("Collecting navigable strings.")
+    logger.debug("Collecting navigable strings.")
     navigable_strings = scrape_all_navigable_strings_in_tag(tag=para)
     for navigable_string in navigable_strings:
-        logging.debug(f"Scraping navigable string: {navigable_string}")
+        logger.debug(f"Scraping navigable string: {navigable_string}")
         artist = navigable_string.text.split(" - ")[0]
         primary_artist = scrape_primary_artist(artist)
         track_name = navigable_string.text.split(" - ")[-1]
@@ -41,7 +43,7 @@ def scrape_tracks_in_section(section: Tag) -> list[ScrapedTrack]:
     scraped_tracks = []
     paras = section.find_all("p")
     for para in paras:
-        logging.debug(f"Scraping para: {para}")
+        logger.debug(f"Scraping para: {para}")
         para_tracks = scrape_tracks_in_para(para=para)
         scraped_tracks.extend(para_tracks)
     return scraped_tracks
@@ -51,7 +53,7 @@ def scrape_tracks_from_playlist_page(playlist_url: PlaylistUrl) -> list[ScrapedT
 
     scraped_tracks: list[ScrapedTrack] = []
 
-    logging.info(f"Scraping tracks from:{playlist_url}")
+    logger.info(f"Scraping tracks from:{playlist_url}")
 
     page = requests.get(url=playlist_url, timeout=30)
     soup = bs(markup=page.content, features="html.parser")
@@ -71,10 +73,10 @@ def scrape_tracks_from_playlist_page(playlist_url: PlaylistUrl) -> list[ScrapedT
         header = headers[0].text.strip()
 
         if header.endswith("LIST"):
-            logging.debug(f"Scraping '*-LIST' section: {section}")
+            logger.debug(f"Scraping '*-LIST' section: {section}")
             section_tracks = scrape_tracks_in_section(section=section)
             scraped_tracks.extend(section_tracks)
 
-    logging.debug(f"Scraped {len(scraped_tracks)} tracks.\n{scraped_tracks}")
+    logger.debug(f"Scraped {len(scraped_tracks)} tracks.\n{scraped_tracks}")
 
     return scraped_tracks

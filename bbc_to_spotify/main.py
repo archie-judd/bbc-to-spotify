@@ -1,10 +1,36 @@
 import logging
+from logging import StreamHandler
+from logging.handlers import RotatingFileHandler
 
 from bbc_to_spotify.authorize.authorize import authorize, maybe_get_credentials
 from bbc_to_spotify.cli import setup_parser
 from bbc_to_spotify.playlist.create import create_playlist_and_add_tracks
 from bbc_to_spotify.playlist.update import update_playlist
 from bbc_to_spotify.utils import get_log_level_for_verbosity
+
+logger = logging.getLogger(__name__)
+
+
+def setup_logging(level: int, filename: str | None = None):
+
+    handlers = []
+    if filename:
+        # Max log file size of 1MB, backing up 5 before deletion
+        file_handler = RotatingFileHandler(
+            filename, mode="a", maxBytes=1048576, backupCount=5
+        )
+        handlers.append(file_handler)
+
+    else:
+        stream_handler = StreamHandler()
+        handlers.append(stream_handler)
+
+    logging.basicConfig(
+        handlers=handlers,
+        level=level,
+        format="%(asctime)s: %(name)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%dT%H:%M:%S %Z",
+    )
 
 
 def main():
@@ -16,14 +42,9 @@ def main():
 
     log_level = get_log_level_for_verbosity(verbosity)
 
-    logging.basicConfig(
-        filename=args.log_file,
-        level=log_level,
-        format="%(asctime)s: %(name)s - %(levelname)s - %(filename)s:%(lineno)s - %(message)s",
-        datefmt="%Y-%m-%dT%H:%M:%S %Z",
-    )
+    setup_logging(level=log_level, filename=args.log_file)
 
-    logging.debug(f"Running with args: {vars(args)}")
+    logger.debug(f"Running with args: {vars(args)}")
 
     if args.command == "authorize":
         authorize(redirect_uri=args.redirect_uri)
@@ -65,4 +86,4 @@ def main():
             else:
                 print("Playlist not updated (dry run).")
 
-    logging.info("Done")
+    logger.info("Done")
