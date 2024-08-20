@@ -170,7 +170,7 @@ def maybe_write_credentials(credentials: Credentials):
         print(
             "\nCredentials successfully written credentials here:"
             f" {CREDENTIALS_PATH}.\n\nYou can now use the 'create-playlist' and "
-            "'update-playlist' commands"
+            "'update-playlist' commands."
         )
     else:
         print(
