@@ -27,13 +27,13 @@ class ParseCredentialsError(Exception):
 
 def write_credentials_file(path: Path | str, credentials: Credentials):
 
-    credentialsWire = CredentialsWire(
+    credentials_model = CredentialsModel(
         client_id=credentials.client_id,
         client_secret=credentials.client_secret,
         refresh_token=credentials.refresh_token,
     )
     with open(path, "w") as file:
-        file.write(credentialsWire.model_dump_json())
+        file.write(credentials_model.model_dump_json())
 
 
 def maybe_read_credentials_file(path: Path | str) -> Credentials | None:
