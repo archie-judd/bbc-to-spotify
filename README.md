@@ -215,7 +215,7 @@ bbc-to-spotify update-playlist <playlist-id> <source> [options]
 
 `--prune` `-p` (flag):
 
-> Remove all duplicates and any tracks that are not in the source playlist."
+> Remove all duplicates and any tracks that are not in the source playlist.
 
 `--update-desc` `-u` (flag):
 
