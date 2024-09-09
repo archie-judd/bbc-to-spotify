@@ -1,6 +1,6 @@
 # BBC to Spotify
 
-A CLI tool for adding songs from BBC radio playlists to Spotify, written in python and packaged with Nix.
+A CLI tool for adding songs from BBC radio playlists to Spotify, written in Python and packaged with Nix.
 
 ## Contents
 
