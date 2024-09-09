@@ -45,7 +45,7 @@ nix shell github:archie-judd/bbc-to-spotify
 nix profile install github:archie-judd/bbc-to-spotify
 ```
 
-- Install declaratively using NixOS or Nix Darwin:
+- Install declaratively with a flake:
 
 For example: https://nixos-and-flakes.thiscute.world/nixos-with-flakes/nixos-flake-and-module-system#install-system-packages-from-other-flakes.
 
