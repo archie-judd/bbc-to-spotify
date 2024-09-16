@@ -46,6 +46,14 @@ class CreatePlaylistBody(BaseModel):
         return self
 
 
+class UpdatePlaylistBody(BaseModel):
+    snapshot_id: str
+    uris: list[str] | None = None
+    range_start: int | None = None
+    insert_before: int | None = None
+    range_length: int | None = None
+
+
 class RemovePlaylistItemsBody(BaseModel):
     tracks: list[TrackURI]
 
@@ -108,7 +116,12 @@ class PlaylistModel(PlaylistMetaModel):
     public: bool
     uri: str
     id: str
+    snapshot_id: str
     description: str | None = None
+
+
+class UpdatePlaylistResponse(BaseModel):
+    snapshot_id: str
 
 
 class GetPlaylistsResponse(BaseModel):

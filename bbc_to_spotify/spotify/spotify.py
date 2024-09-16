@@ -20,6 +20,8 @@ from bbc_to_spotify.spotify.models.external import (
     TrackSearchResponse,
     TracksWithMetaModel,
     TrackURI,
+    UpdatePlaylistBody,
+    UpdatePlaylistResponse,
     UserModel,
 )
 
@@ -311,6 +313,39 @@ class Spotify:
         playlist = PlaylistModel.model_validate(response_json)
 
         return playlist
+
+    @check_access_token
+    def update_playlist(
+        self,
+        playlist_id: str,
+        snapshot_id: str,
+        uris: list[str] | None = None,
+        range_start: int | None = None,
+        insert_before: int | None = None,
+        range_length: int | None = None,
+    ) -> UpdatePlaylistResponse:
+
+        url_ext = f"{self.version}/playlists/{playlist_id}/tracks"
+        url = urljoin(base=self.base_url, url=url_ext)
+
+        body = UpdatePlaylistBody(
+            snapshot_id=snapshot_id,
+            uris=uris,
+            range_start=range_start,
+            insert_before=insert_before,
+            range_length=range_length,
+        ).model_dump(exclude_none=True)
+
+        logger.debug(f"Updating playlist: {body}")
+
+        response = self.api_call(
+            url, method="put", headers=self.authorization_headers, json=body
+        )
+
+        response_json = response.json()
+        response = UpdatePlaylistResponse.model_validate(response_json)
+
+        return response
 
     @check_access_token
     def get_current_user_profile(self) -> UserModel:
