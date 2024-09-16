@@ -17,7 +17,7 @@ def setup_logging(level: int, filename: str | None = None):
     if filename:
         # Max log file size of 1MB, backing up 5 before deletion
         file_handler = RotatingFileHandler(
-            filename, mode="a", maxBytes=1024*1024, backupCount=5
+            filename, mode="a", maxBytes=1024 * 1024, backupCount=5
         )
         handlers.append(file_handler)
 
@@ -48,7 +48,7 @@ def main():
 
     if args.command == "authorize":
         authorize(redirect_uri=args.redirect_uri)
-    else:
+    elif args.command == "create-playlist":
         credentials = maybe_get_credentials()
         if credentials is None:
             print(
@@ -56,7 +56,7 @@ def main():
                 "credentials, or alternatively set the environment variables "
                 "SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN."
             )
-        elif args.command == "create-playlist":
+        else:
             playlist = create_playlist_and_add_tracks(
                 credentials=credentials,
                 source=args.source,
@@ -71,7 +71,15 @@ def main():
                 )
             else:
                 print("Playlist not created (dry run).")
-        elif args.command == "update-playlist":
+    elif args.command == "update-playlist":
+        credentials = maybe_get_credentials()
+        if credentials is None:
+            print(
+                "No credentials found, run 'bbc-to-spotify authorize' to generate "
+                "credentials, or alternatively set the environment variables "
+                "SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN."
+            )
+        else:
             update_playlist(
                 credentials=credentials,
                 playlist_id=args.playlist_id,
