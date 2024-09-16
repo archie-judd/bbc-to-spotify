@@ -217,6 +217,10 @@ bbc-to-spotify update-playlist <playlist-id> <source> [options]
 
 > Remove all duplicates and any tracks that are not in the source playlist.
 
+`--prepend` `-P` (flag):
+
+> Add new tracks to the beginning of the playlist (default behaviour is to add them at the end).
+
 `--update-desc` `-u` (flag):
 
 > Add a 'Last updated' timestamp to the destination playlist description.

@@ -78,6 +78,7 @@ def main():
                 source=args.source,
                 remove_duplicates=args.no_dups,
                 prune_dest=args.prune,
+                prepend=args.prepend,
                 update_description=args.update_desc,
                 dry_run=args.dry_run,
             )

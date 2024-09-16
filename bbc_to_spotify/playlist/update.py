@@ -63,6 +63,7 @@ def add_tracks_and_prune_playlist(
     playlist_id: str,
     dest_tracks: list[Track],
     source_tracks: list[Track],
+    prepend: bool,
     dry_run: bool,
 ):
 
@@ -93,6 +94,7 @@ def add_tracks_and_prune_playlist(
         dest_tracks=list(tracks_to_stay),
         source_tracks=source_tracks,
         remove_duplicates=True,
+        prepend=prepend,
         dry_run=dry_run,
     )
 
@@ -103,6 +105,7 @@ def update_playlist(
     source: Station,
     remove_duplicates: bool,
     prune_dest: bool,
+    prepend: bool,
     update_description: bool,
     dry_run: bool,
 ):
@@ -126,6 +129,7 @@ def update_playlist(
             playlist_id=dest_playlist.id,
             dest_tracks=dest_playlist.tracks,
             source_tracks=source_tracks,
+            prepend=prepend,
             dry_run=dry_run,
         )
     else:
@@ -135,6 +139,7 @@ def update_playlist(
             dest_tracks=dest_playlist.tracks,
             source_tracks=source_tracks,
             remove_duplicates=remove_duplicates,
+            prepend=prepend,
             dry_run=dry_run,
         )
 

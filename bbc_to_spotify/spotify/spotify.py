@@ -208,12 +208,16 @@ class Spotify:
         return playlist
 
     @check_access_token
-    def add_to_playlist(self, playlist_id: str, track_uris: list[str]):
+    def add_to_playlist(
+        self, playlist_id: str, track_uris: list[str], position: int | None = None
+    ):
         url_ext = f"{self.version}/playlists/{playlist_id}/tracks"
         url = urljoin(base=self.base_url, url=url_ext)
 
         for _track_uris in utils.batch_list(track_uris, batch_size=100):
-            params = AddItemsToPlaylistBody(uris=",".join(_track_uris)).model_dump()
+            params = AddItemsToPlaylistBody(
+                uris=",".join(_track_uris), position=position
+            ).model_dump()
 
             logger.debug(f"Adding: {params}.")
 

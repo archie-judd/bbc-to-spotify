@@ -19,6 +19,7 @@ class SearchParams(BaseModel):
 
 class AddItemsToPlaylistBody(BaseModel):
     uris: str
+    position: int | None = None
 
 
 class GetAccessTokenBody(BaseModel):

@@ -115,6 +115,13 @@ def setup_parser() -> ArgumentParser:
         required=False,
         action="store_true",
     )
+    update_parser.add_argument(
+        "--prepend",
+        "-P",
+        help="Add any new tracks to the beginning of the playlist (tracks are appended by default).",
+        required=False,
+        action="store_true",
+    )
 
     create_parser.add_argument(
         "name",

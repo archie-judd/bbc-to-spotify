@@ -89,6 +89,7 @@ def create_playlist_and_add_tracks(
         dest_tracks=dest_playlist.tracks,
         source_tracks=source_tracks,
         remove_duplicates=False,
+        prepend=False,
         dry_run=dry_run,
     )
 

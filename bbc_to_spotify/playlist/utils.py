@@ -104,6 +104,7 @@ def add_tracks_to_playlist(
     dest_tracks: list[Track],
     source_tracks: list[Track],
     remove_duplicates: bool,
+    prepend: bool,
     dry_run: bool,
 ):
 
@@ -119,6 +120,7 @@ def add_tracks_to_playlist(
             spotify_client.add_to_playlist(
                 playlist_id=playlist_id,
                 track_uris=[track.uri for track in tracks_to_add],
+                position=None if not prepend else 0,
             )
         else:
             logger.info("No tracks added (dry run).")
