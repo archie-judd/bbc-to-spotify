@@ -53,6 +53,18 @@ class UpdatePlaylistBody(BaseModel):
     insert_before: int | None = None
     range_length: int | None = None
 
+    @model_validator(mode="after")
+    def check_uris_or_range(self) -> Self:
+        if self.uris and (self.range_start or self.insert_before or self.range_length):
+            raise ValueError(
+                "Must provide either uris, or range parameters (range_start, insert_before and optionally range_length)"
+            )
+        elif self.range_start and not self.insert_before:
+            raise ValueError(
+                "Must provide either uris, or range parameters (range_start, insert_before and optionally range_length)"
+            )
+        return self
+
 
 class RemovePlaylistItemsBody(BaseModel):
     tracks: list[TrackURI]
