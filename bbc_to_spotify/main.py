@@ -35,64 +35,69 @@ def setup_logging(level: int, filename: str | None = None):
 
 def main():
 
-    parser = setup_parser()
-    args = parser.parse_args()
+    try:
 
-    verbosity = args.verbose - args.quiet
+        parser = setup_parser()
+        args = parser.parse_args()
 
-    log_level = get_log_level_for_verbosity(verbosity)
+        verbosity = args.verbose - args.quiet
 
-    setup_logging(level=log_level, filename=args.log_file)
+        log_level = get_log_level_for_verbosity(verbosity)
 
-    logger.debug(f"Running with args: {vars(args)}")
+        setup_logging(level=log_level, filename=args.log_file)
 
-    if args.command == "authorize":
-        authorize(redirect_uri=args.redirect_uri)
-    elif args.command == "create-playlist":
-        credentials = maybe_get_credentials()
-        if credentials is None:
-            print(
-                "No credentials found, run 'bbc-to-spotify authorize' to generate "
-                "credentials, or alternatively set the environment variables "
-                "SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN."
-            )
-        else:
-            playlist = create_playlist_and_add_tracks(
-                credentials=credentials,
-                source=args.source,
-                playlist_name=args.name,
-                private=args.private,
-                description=args.desc,
-                dry_run=args.dry_run,
-            )
-            if not args.dry_run:
+        logger.debug(f"Running with args: {vars(args)}")
+
+        if args.command == "authorize":
+            authorize(redirect_uri=args.redirect_uri)
+        elif args.command == "create-playlist":
+            credentials = maybe_get_credentials()
+            if credentials is None:
                 print(
-                    f"New playlist successfully created. Its playlist ID is: {playlist.id}"
+                    "No credentials found, run 'bbc-to-spotify authorize' to generate "
+                    "credentials, or alternatively set the environment variables "
+                    "SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN."
                 )
             else:
-                print("Playlist not created (dry run).")
-    elif args.command == "update-playlist":
-        credentials = maybe_get_credentials()
-        if credentials is None:
-            print(
-                "No credentials found, run 'bbc-to-spotify authorize' to generate "
-                "credentials, or alternatively set the environment variables "
-                "SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN."
-            )
-        else:
-            update_playlist(
-                credentials=credentials,
-                playlist_id=args.playlist_id,
-                source=args.source,
-                remove_duplicates=args.no_dups,
-                prune_dest=args.prune,
-                prepend=args.prepend,
-                update_description=args.update_desc,
-                dry_run=args.dry_run,
-            )
-            if not args.dry_run:
-                print(f"Playlist successfully updated.")
+                playlist = create_playlist_and_add_tracks(
+                    credentials=credentials,
+                    source=args.source,
+                    playlist_name=args.name,
+                    private=args.private,
+                    description=args.desc,
+                    dry_run=args.dry_run,
+                )
+                if not args.dry_run:
+                    print(
+                        f"New playlist successfully created. Its playlist ID is: {playlist.id}"
+                    )
+                else:
+                    print("Playlist not created (dry run).")
+        elif args.command == "update-playlist":
+            credentials = maybe_get_credentials()
+            if credentials is None:
+                print(
+                    "No credentials found, run 'bbc-to-spotify authorize' to generate "
+                    "credentials, or alternatively set the environment variables "
+                    "SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN."
+                )
             else:
-                print("Playlist not updated (dry run).")
+                update_playlist(
+                    credentials=credentials,
+                    playlist_id=args.playlist_id,
+                    source=args.source,
+                    remove_duplicates=args.no_dups,
+                    prune_dest=args.prune,
+                    prepend=args.prepend,
+                    update_description=args.update_desc,
+                    dry_run=args.dry_run,
+                )
+                if not args.dry_run:
+                    print(f"Playlist successfully updated.")
+                else:
+                    print("Playlist not updated (dry run).")
 
-    logger.info("Done")
+        logger.info("Done")
+
+    except Exception as e:
+        logger.error(f"Unexpected error: {e}")
