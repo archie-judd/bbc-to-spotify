@@ -118,8 +118,6 @@ Once authenticated, the CLI app will store the necessary credentials (like your 
 
 If you need to reauthorize, simply run the authorize command again.
 
-> See [I don't want to store my credentials. Can I still use the CLI?](#i-dont-want-to-store-my-credentials-can-i-still-use-the-cli) if you want to use the CLI without storing your credentials.
-
 ### Troubleshooting Authorization:
 
 If you did not use the recommended redirect URI when creating your Spotify App, make sure to add the argument `--redirect-uri <your-redirect-uri>`.
@@ -154,7 +152,7 @@ The `create-playlist` playlist command is used to create a new Spotify playlist 
 To create a new playlist called "BBC Radio 6 Music" using BBC Radio 6 Music as a source:
 
 ```bash
-poetry run bbc-to-spotify create-playlist "BBC Radio 6 Music"  radio-6
+poetry run bbc-to-spotify create-playlist <your-new-playlist-name>  radio-6
 ```
 
 Possible sources include:
@@ -172,10 +170,10 @@ Run `poetry run bbc-to-spotify create-playlist -h` to show help and options for 
 
 `update-playlist` is used to update an existing Spotify playlist with songs from a BBC radio station's current playlist.
 
-To update add songs from BBC radio 1 to a playlist with ID `3UoR0uBr3rl6LXEPDR8n5B`:
+To update your playlist with songs from BBC Radio 1:
 
 ```bash
-bbc-to-spotify update-playlist 3UoR0uBr3rl6LXEPDR8n5B radio-1
+bbc-to-spotify update-playlist <your-playlist-id> radio-1
 ```
 
 Run `bbc-to-spotify update-playlist -h` to show help and options for this command.
