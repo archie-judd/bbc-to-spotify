@@ -86,8 +86,7 @@ If you installed via **Nix**, simply run:
 
 ### 2. Follow the Prompts:
 
-The command will prompt you to log in to enter your client ID and Secret, and then login to your Spotify account (if not already logged in). It will then request authorization to access the necessary Spotify data.
-
+The command will prompt you to log in to enter your client ID and Secret, and then login to your Spotify account (if not already logged in).
 ### 3. Complete the Authorization:
 
 Once authenticated, the CLI app will store the necessary credentials (like your Client ID and Client Secret) for future use. These credentials will be automatically used by the app during operation.
