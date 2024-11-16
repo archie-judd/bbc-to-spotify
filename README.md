@@ -33,7 +33,7 @@ It works for: BBC Radio 1, BBC Radio 1 Xtra, BBC Radio 2, BBC Radio 6 Music, and
 
 - **Spotify Account**: A valid Spotify account is required to use this app.
 - **Spotify Developer App**: You need to create a Spotify app to generate client credentials that will be required for authorizing the CLI.
-  - You can follow [Spotify instructions](https://developer.spotify.com/documentation/web-api/concepts/apps).
+  - You can follow [Spotify's instructions](https://developer.spotify.com/documentation/web-api/concepts/apps).
   - It is recommended to use the following redirect URI: `http://localhost:8080/bbc-to-spotify`.
   - Make a note of your client ID and secret.
 - **For a Poetry installation**:
