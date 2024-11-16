@@ -8,30 +8,6 @@ Sync your Spotify playlists with BBC radio station playlists.
 
 It works for: BBC Radio 1, BBC Radio 1 Xtra, BBC Radio 2, BBC Radio 6 Music, and BBC Asian Network.
 
-## Contents
-
-<!-- vim-markdown-toc GFM -->
-
-* [Requirements](#requirements)
-* [Installation](#installation)
-    * [Option 1: Using Poetry](#option-1-using-poetry)
-    * [Option 2: Using Nix](#option-2-using-nix)
-* [Authorize the CLI](#authorize-the-cli)
-    * [1. Run the Authorization Command:](#1-run-the-authorization-command)
-    * [2. Follow the Prompts:](#2-follow-the-prompts)
-    * [3. Complete the Authorization:](#3-complete-the-authorization)
-    * [Troubleshooting Authorization:](#troubleshooting-authorization)
-* [Usage](#usage)
-* [Examples](#examples)
-    * [Creating a playlist (with Poetry)](#creating-a-playlist-with-poetry)
-    * [Updating a playlist (with Nix)](#updating-a-playlist-with-nix)
-* [FAQ](#faq)
-    * [1. How can I find a playlist's ID?](#1-how-can-i-find-a-playlists-id)
-    * [2. I don't want to store my credentials. Can I still use the CLI?](#2-i-dont-want-to-store-my-credentials-can-i-still-use-the-cli)
-    * [3. What permission scopes are provided to the CLI?](#3-what-permission-scopes-are-provided-to-the-cli)
-
-<!-- vim-markdown-toc -->
-
 ## Requirements
 
 - **Spotify Account**: A valid Spotify account is required to use this app.
