@@ -12,11 +12,12 @@ It works for: BBC Radio 1, BBC Radio 1 Xtra, BBC Radio 2, BBC Radio 6 Music, and
 
 * [Requirements](#requirements)
 * [Installation](#installation)
-* [Configuration](#configuration)
-    * [Create a Spotify app](#create-a-spotify-app)
-    * [Authorize the CLI](#authorize-the-cli)
+    * [Option 1: Using Poetry](#option-1-using-poetry)
+    * [Option 2: Using Nix](#option-2-using-nix)
+* [Authorize the CLI](#authorize-the-cli)
+    * [Troubleshooting Authorization:](#troubleshooting-authorization)
 * [Usage](#usage)
-    * [Authorization](#authorization)
+* [Examples](#examples)
     * [Creating a playlist](#creating-a-playlist)
     * [Updating a playlist](#updating-a-playlist)
 * [FAQ](#faq)
@@ -28,19 +29,50 @@ It works for: BBC Radio 1, BBC Radio 1 Xtra, BBC Radio 2, BBC Radio 6 Music, and
 
 ## Requirements
 
-1. Nix
-
-- Installable here: https://nixos.org/download.
-- Ensure nix-command and flakes are enabled. Instructions here: https://nixos.wiki/wiki/Flakes.
-
-2. A Spotify account
+- **Spotify Account**: A valid Spotify account is required to use this app (free or premium, depending on the functionality).
+- **Spotify Developer App**: You need to create a Spotify app to generate client credentials that will be required for authorizing the CLI.
+  - You can follow [Spotify instructions](https://developer.spotify.com/documentation/web-api/concepts/apps).
+  - It is recommended to use the following redirect URI: `http://localhost:8080/bbc-to-spotify`.
+  - Make a note of your client ID and secret.
+- **For a Poetry installation**:
+  - Python 3.10+
+  - [Poetry](https://python-poetry.org/)
+- **For a Nix installation**:
+  - [Nix](https://nixos.org/download)
+  - Ensure nix-command and flakes are enabled. Instructions here: https://nixos.wiki/wiki/Flakes.
 
 ## Installation
 
-- Enter a temporary nix shell with `bbc-to-spotify` installed:
+### Option 1: Using Poetry
+
+Install directly from the Git URL:
 
 ```bash
-nix shell github:archie-judd/bbc-to-spotify
+poetry add git+https://github.com/archie-judd/bbc-to-spotify
+```
+
+Or clone the repo and install locally:
+
+```bash
+git clone https://github.com/archie-judd/bbc-to-spotify
+cd bbc-to-spotify
+poetry install
+```
+
+---
+
+Check install was successful by running the following command:
+
+```bash
+poetry run bbc-to-spotify --version
+```
+
+### Option 2: Using Nix
+
+- Enter a temporary nix bash with `bbc-to-spotify` installed:
+
+```bash
+nix bash github:archie-judd/bbc-to-spotify
 ```
 
 - Install imperatively:
@@ -61,31 +93,18 @@ Check install was successful by running the following command:
 bbc-to-spotify --version
 ```
 
-## Configuration
-
-### Create a Spotify app
-
-You need to create a Spotify app to generate client credentials that will be required for authorizing the CLI.
-
-You can follow the steps here: https://developer.spotify.com/documentation/web-api/concepts/apps.
-
-When asked for a redirect URI, it is recommended to use the following value, however you may use a different one if you would like.
-
-```
-http://localhost:8080/bbc-to-spotify
-```
-
-### Authorize the CLI
+## Authorize the CLI
 
 This process will generate a refresh token, and optionally store it with your client credentials in your home folder for future authentication.
 
-Start the authorization helper by running:
-
-```shell
-bbc-to-spotify authorize
-```
-
-> See [Authorization](#authorization) for help on the authorize command.
+- With **Poetry**:
+  ```bash
+  poetry run bbc-to-spotify authorize
+  ```
+- With **Nix**:
+  ```bash
+  bbc-to-spotify authorize
+  ```
 
 You will be prompted for your client ID and client secret. You can copy them from your app's page.
 
@@ -93,153 +112,80 @@ You will then be taken through the steps to generate a refresh token, and asked 
 
 > See [I don't want to store my credentials. Can I still use the CLI?](#i-dont-want-to-store-my-credentials-can-i-still-use-the-cli) if you want to use the CLI without storing your credentials.
 
+### Troubleshooting Authorization:
+
+If you did not use `http://localhost:8080/bbc-to-spotify` as a redirect URI when creating your Spotify App, make sure to add the argument `--redirect-uri <your-redirect-uri>`.
+
+Run `poetry run bbc-to-spotify authorize -h` (Poetry) or `bbc-to-spotify -h` (Nix) for help on the `authorize` command.
+
 ## Usage
 
-CLI commands take the following format.
+Commands take the following format:
 
-```
-bbc-to-spotify <command> [arguments]
-```
-
-Run `bbc-to-spotify <command> -h` for information on a specific command.
+- For **Poetry**:
+  ```bash
+  poetry run bbc-to-spotify <command> [arguments]
+  ```
+- For **Nix**:
+  ```bash
+  bbc-to-spotify <command> [arguments]
+  ```
 
 The available commands are: `authorize`, `create-playlist` and `update-playlist`.
 
-### Authorization
+To find help for a particular command:
 
-`authorize` runs the authorization process to generate credentials that will be needed to run the `create-playlist` and `update-playlist` commands.
+- For **Poetry**:
+  ```bash
+  poetry run bbc-to-spotify <command> -h
+  ```
+- For **Nix**:
+  ```bash
+  bbc-to-spotify <command> -h
+  ```
 
-```
-bbc-to-spotify authorize [options]
-```
-
-**Options**
-
-`--redirect-uri <value>` (string):
-
-> Redirect URI to use during authorization. Default value is `http://localhost:8080/bbc-to-spotify`.
-
-`--verbose`, `-v` (flag):
-
-> Increase the logging verbosity logging (`-vv` to increase further).
-
-`--quiet`, `-q` (flag):
-
-> Decrease the verbosity of logging (`-qq` to decrease further).
-
-`--log-file <filepath>` (string):
-
-> Write logs to this file. Suppresses logging in stdout.
+## Examples
 
 ### Creating a playlist
 
-`create-playlist` is used to create a new Spotify playlist with songs from a BBC radio station's current playlist.
+The `create-playlist` playlist command is used to create a new Spotify playlist with songs from a BBC radio station's current playlist.
 
-```
-bbc-to-spotify create-playlist <name> <source> [options]
-```
+To create a new playlist called "BBC Radio 6 Music" using BBC Radio 6 Music as a source:
 
-**Required arguments**
+- For **Poetry**:
+  ```bash
+  poetry run bbc-to-spotify create-playlist "BBC Radio 6 Music"  radio-6
+  ```
+- For **Nix**:
+  ```bash
+  bbc-to-spotify create-playlist "BBC Radio 6 Music"  radio-6
+  ```
 
-`name` (string):
+Possible sources include:
+`radio-1`
+`radio-1-xtra`
+`radio-2`
+`radio-6`
+`bbc-asian-network`
 
-> The name of the playlist to be created.
-
-`source` (string):
-
-> The BBC Radio station whose current playlist should be added to the Spotify playlist.
->
-> Possible values:\
-> `radio-1`\
-> `radio-1-xtra`\
-> `radio-2`\
-> `radio-6`\
-> `bbc-asian-network`
-
-**Options**
-
-`--dry-run` `-n` (flag):
-
-> Run the command but do not create the destination playlist.
-
-`--private`, `-p` (flag):
-
-> Make the playlist private rather than public.
-
-`--desc <description>` (string):
-
-> The description to add to the destination playlist.
-
-`--verbose`, `-v` (flag):
-
-> Increase logging verbosity (`-vv` to increase further).
-
-`--quiet`, `-q` (flag):
-
-> Decrease logging verbosity (`-qq` to decrease further).
-
-`--log-file <filepath>` (string):
-
-> Write logs to this file. Suppresses logging in stdout.
+The playlist ID will be printed when the playlist has been successfully created. Make a note of it, it will be required for updating the playlist.
 
 ### Updating a playlist
 
 `update-playlist` is used to update an existing Spotify playlist with songs from a BBC radio station's current playlist.
 
-```
-bbc-to-spotify update-playlist <playlist-id> <source> [options]
-```
+To update add songs from BBC radio 1 to a playlist with ID `3UoR0uBr3rl6LXEPDR8n5B`:
 
-**Required arguments**
+- For **Poetry**:
+  ```bash
+  poetry run bbc-to-spotify update-playlist 3UoR0uBr3rl6LXEPDR8n5B radio-1
+  ```
+- For **Nix**:
+  ```bash
+  bbc-to-spotify update-playlist  3UoR0uBr3rl6LXEPDR8n5B radio-1
+  ```
 
-`playlist-id` (string):
-
-> The ID of the Spotify playlist on which to add the BBC station's current playlist tracks.
-
-`source` (string):
-
-> The BBC Radio station whose current playlist should be added to the Spotify playlist.
->
-> Possible values:\
-> `radio-1`\
-> `radio-1-xtra`\
-> `radio-2`\
-> `radio-6`\
-> `bbc-asian-network`
-
-**Options**
-
-`--dry-run` `-n` (flag):
-
-> Run the command but do not update the destination playlist.
-
-`--no-dups` `-N` (flag):
-
-> Only add tracks that are not already in the destination playlist.
-
-`--prune` `-p` (flag):
-
-> Remove all duplicates and any tracks that are not in the source playlist.
-
-`--prepend` `-P` (flag):
-
-> Add new tracks to the beginning of the playlist (default behaviour is to add them at the end).
-
-`--update-desc` `-u` (flag):
-
-> Add a 'Last updated' timestamp to the destination playlist description.
-
-`--verbose`, `-v` (flag):
-
-> Increase logging verbosity (`-vv` to increase further).
-
-`--quiet`, `-q` (flag):
-
-> Decrease logging verbosity (`-qq` to decrease further).
-
-`--log-file <filepath>` (string):
-
-> Write logs to this file. Suppresses logging in stdout.
+See the CLI help for options that can be used with this command.
 
 ## FAQ
 
