@@ -181,7 +181,7 @@ To update add songs from BBC radio 1 to a playlist with ID `3UoR0uBr3rl6LXEPDR8n
   ```
 - For **Nix**:
   ```bash
-  bbc-to-spotify update-playlist  3UoR0uBr3rl6LXEPDR8n5B radio-1
+  bbc-to-spotify update-playlist 3UoR0uBr3rl6LXEPDR8n5B radio-1
   ```
 
 See the CLI help for options that can be used with this command.
