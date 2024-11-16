@@ -51,7 +51,7 @@ poetry run bbc-to-spotify --version
 Enter a temporary nix bash with `bbc-to-spotify` installed:
 
 ```bash
-nix bash github:archie-judd/bbc-to-spotify
+nix shell github:archie-judd/bbc-to-spotify
 ```
 
 Or install imperatively:
