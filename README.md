@@ -69,19 +69,19 @@ poetry run bbc-to-spotify --version
 
 ### Option 2: Using Nix
 
-- Enter a temporary nix bash with `bbc-to-spotify` installed:
+Enter a temporary nix bash with `bbc-to-spotify` installed:
 
 ```bash
 nix bash github:archie-judd/bbc-to-spotify
 ```
 
-- Install imperatively:
+Or install imperatively:
 
 ```bash
 nix profile install github:archie-judd/bbc-to-spotify
 ```
 
-- Install declaratively with a flake:
+Or install declaratively with a flake:
   - For example: https://nixos-and-flakes.thiscute.world/nixos-with-flakes/nixos-flake-and-module-system#install-system-packages-from-other-flakes.
 
 Check install was successful by running the following command:
