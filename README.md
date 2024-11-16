@@ -17,15 +17,18 @@ It works for: BBC Radio 1, BBC Radio 1 Xtra, BBC Radio 2, BBC Radio 6 Music, and
     * [Option 1: Using Poetry](#option-1-using-poetry)
     * [Option 2: Using Nix](#option-2-using-nix)
 * [Authorize the CLI](#authorize-the-cli)
+    * [1. Run the Authorization Command:](#1-run-the-authorization-command)
+    * [2. Follow the Prompts:](#2-follow-the-prompts)
+    * [3. Complete the Authorization:](#3-complete-the-authorization)
     * [Troubleshooting Authorization:](#troubleshooting-authorization)
 * [Usage](#usage)
 * [Examples](#examples)
-    * [Creating a playlist](#creating-a-playlist)
-    * [Updating a playlist](#updating-a-playlist)
+    * [Creating a playlist (with Poetry)](#creating-a-playlist-with-poetry)
+    * [Updating a playlist (with Nix)](#updating-a-playlist-with-nix)
 * [FAQ](#faq)
-    * [How can I find a playlist's ID?](#how-can-i-find-a-playlists-id)
-    * [I don't want to store my credentials. Can I still use the CLI?](#i-dont-want-to-store-my-credentials-can-i-still-use-the-cli)
-    * [What permission scopes are provided to the CLI?](#what-permission-scopes-are-provided-to-the-cli)
+    * [1. How can I find a playlist's ID?](#1-how-can-i-find-a-playlists-id)
+    * [2. I don't want to store my credentials. Can I still use the CLI?](#2-i-dont-want-to-store-my-credentials-can-i-still-use-the-cli)
+    * [3. What permission scopes are provided to the CLI?](#3-what-permission-scopes-are-provided-to-the-cli)
 
 <!-- vim-markdown-toc -->
 
@@ -82,7 +85,8 @@ nix profile install github:archie-judd/bbc-to-spotify
 ```
 
 Or install declaratively with a flake:
-  - For example: https://nixos-and-flakes.thiscute.world/nixos-with-flakes/nixos-flake-and-module-system#install-system-packages-from-other-flakes.
+
+- For example: https://nixos-and-flakes.thiscute.world/nixos-with-flakes/nixos-flake-and-module-system#install-system-packages-from-other-flakes.
 
 Check install was successful by running the following command:
 
@@ -92,28 +96,33 @@ bbc-to-spotify --version
 
 ## Authorize the CLI
 
-This process will generate a refresh token, and optionally store it with your client credentials in your home folder for future authentication.
+To authorize the app to access Spotify’s API, you need to run the authorize command.
 
-- With **Poetry**:
-  ```bash
-  poetry run bbc-to-spotify authorize
-  ```
-- With **Nix**:
-  ```bash
-  bbc-to-spotify authorize
-  ```
+### 1. Run the Authorization Command:
 
-You will be prompted for your client ID and client secret. You can copy them from your app's page.
+If you installed via **Poetry**, use poetry run to run the authorization command:
 
-You will then be taken through the steps to generate a refresh token, and asked if your credentials may be stored for future authentication.
+`poetry run bbc-to-spotify authorize`
+
+If you installed via **Nix**, simply run:
+
+`bbc-to-spotify authorize`
+
+### 2. Follow the Prompts:
+
+The command will prompt you to log in to enter your client ID and Secret, and then login to your Spotify account (if not already logged in). It will then request authorization to access the necessary Spotify data.
+
+### 3. Complete the Authorization:
+
+Once authenticated, the CLI app will store the necessary credentials (like your Client ID and Client Secret) for future use. These credentials will be automatically used by the app during operation.
+
+If you need to reauthorize, simply run the authorize command again.
 
 > See [I don't want to store my credentials. Can I still use the CLI?](#i-dont-want-to-store-my-credentials-can-i-still-use-the-cli) if you want to use the CLI without storing your credentials.
 
 ### Troubleshooting Authorization:
 
-If you did not use `http://localhost:8080/bbc-to-spotify` as a redirect URI when creating your Spotify App, make sure to add the argument `--redirect-uri <your-redirect-uri>`.
-
-Run `poetry run bbc-to-spotify authorize -h` (Poetry) or `bbc-to-spotify -h` (Nix) for help on the `authorize` command.
+If you did not use the recommended redirect URI when creating your Spotify App, make sure to add the argument `--redirect-uri <your-redirect-uri>`.
 
 ## Usage
 
@@ -132,18 +141,13 @@ The available commands are: `authorize`, `create-playlist` and `update-playlist`
 
 To find help for a particular command:
 
-- For **Poetry**:
-  ```bash
-  poetry run bbc-to-spotify <command> -h
-  ```
-- For **Nix**:
-  ```bash
-  bbc-to-spotify <command> -h
-  ```
+```bash
+bbc-to-spotify <command> -h
+```
 
 ## Examples
 
-### Creating a playlist
+### Creating a playlist (with Poetry)
 
 The `create-playlist` playlist command is used to create a new Spotify playlist with songs from a BBC radio station's current playlist.
 
@@ -152,10 +156,6 @@ To create a new playlist called "BBC Radio 6 Music" using BBC Radio 6 Music as a
 - For **Poetry**:
   ```bash
   poetry run bbc-to-spotify create-playlist "BBC Radio 6 Music"  radio-6
-  ```
-- For **Nix**:
-  ```bash
-  bbc-to-spotify create-playlist "BBC Radio 6 Music"  radio-6
   ```
 
 Possible sources include:
@@ -167,26 +167,23 @@ Possible sources include:
 
 The playlist ID will be printed when the playlist has been successfully created. Make a note of it, it will be required for updating the playlist.
 
-### Updating a playlist
+Run `poetry run bbc-to-spotify create-playlist -h` to show help and options for this command.
+
+### Updating a playlist (with Nix)
 
 `update-playlist` is used to update an existing Spotify playlist with songs from a BBC radio station's current playlist.
 
 To update add songs from BBC radio 1 to a playlist with ID `3UoR0uBr3rl6LXEPDR8n5B`:
 
-- For **Poetry**:
-  ```bash
-  poetry run bbc-to-spotify update-playlist 3UoR0uBr3rl6LXEPDR8n5B radio-1
-  ```
-- For **Nix**:
-  ```bash
-  bbc-to-spotify update-playlist 3UoR0uBr3rl6LXEPDR8n5B radio-1
-  ```
+```bash
+bbc-to-spotify update-playlist 3UoR0uBr3rl6LXEPDR8n5B radio-1
+```
 
-See the CLI help for options that can be used with this command.
+Run `bbc-to-spotify update-playlist -h` to show help and options for this command.
 
 ## FAQ
 
-### How can I find a playlist's ID?
+### 1. How can I find a playlist's ID?
 
 The playlists ID should be printed out after successfully executing the `create-playlist` command.
 
@@ -198,12 +195,12 @@ This will give you a full playlist link that looks like the following:
 
 The playlist ID is the code after `playlist/` and before `?si` (`37i9dQZF1DWXRqgorJj26U`).
 
-### I don't want to store my credentials. Can I still use the CLI?
+### 2. I don't want to store my credentials. Can I still use the CLI?
 
 Yes. You can then authorize `bbc-to-spotify` by setting the following environment variables before use: `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REFRESH_TOKEN`.
 
 You can get a refresh token by running `bbc-to-spotify authorize` and pressing `N` when asked to store credentials.
 
-### What permission scopes are provided to the CLI?
+### 3. What permission scopes are provided to the CLI?
 
 The scopes `modify-playlist-public`and `modify-playlist-private` are provided. See more about scopes here: https://developer.spotify.com/documentation/web-api/concepts/scopes.
