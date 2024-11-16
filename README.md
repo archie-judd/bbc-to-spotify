@@ -1,8 +1,10 @@
 # BBC to Spotify
 
-Want to listen to whatever your favourite BBC radio station is playing, without all the conversational interludes?
+Sync your Spotify playlists with BBC radio station playlists.
 
-This tool grabs the current playlist for a given BBC radio station, and uses these songs to create or update a Spotify playlist of your choice.
+## What is BBC to Spotify
+
+`bbc-to-spotify` grabs the current playlist for a given BBC radio station, and uses these songs to create or update a Spotify playlist of your choice.
 
 It works for: BBC Radio 1, BBC Radio 1 Xtra, BBC Radio 2, BBC Radio 6 Music, and BBC Asian Network.
 
@@ -28,6 +30,8 @@ It works for: BBC Radio 1, BBC Radio 1 Xtra, BBC Radio 2, BBC Radio 6 Music, and
 <!-- vim-markdown-toc -->
 
 ## Requirements
+
+The app can be installed using Poetry or Nix.
 
 - **Spotify Account**: A valid Spotify account is required to use this app (free or premium, depending on the functionality).
 - **Spotify Developer App**: You need to create a Spotify app to generate client credentials that will be required for authorizing the CLI.
@@ -59,8 +63,6 @@ cd bbc-to-spotify
 poetry install
 ```
 
----
-
 Check install was successful by running the following command:
 
 ```bash
@@ -82,10 +84,7 @@ nix profile install github:archie-judd/bbc-to-spotify
 ```
 
 - Install declaratively with a flake:
-
-For example: https://nixos-and-flakes.thiscute.world/nixos-with-flakes/nixos-flake-and-module-system#install-system-packages-from-other-flakes.
-
----
+  - For example: https://nixos-and-flakes.thiscute.world/nixos-with-flakes/nixos-flake-and-module-system#install-system-packages-from-other-flakes.
 
 Check install was successful by running the following command:
 
