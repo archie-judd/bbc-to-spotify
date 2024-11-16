@@ -153,10 +153,9 @@ The `create-playlist` playlist command is used to create a new Spotify playlist 
 
 To create a new playlist called "BBC Radio 6 Music" using BBC Radio 6 Music as a source:
 
-- For **Poetry**:
-  ```bash
-  poetry run bbc-to-spotify create-playlist "BBC Radio 6 Music"  radio-6
-  ```
+```bash
+poetry run bbc-to-spotify create-playlist "BBC Radio 6 Music"  radio-6
+```
 
 Possible sources include:
 `radio-1`
