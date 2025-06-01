@@ -3,7 +3,7 @@
 
     flake-utils.url = "github:numtide/flake-utils";
 
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
     poetry2nix = {
       url = "github:nix-community/poetry2nix";
