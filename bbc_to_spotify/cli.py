@@ -166,7 +166,7 @@ def setup_parser() -> ArgumentParser:
         "--redirect-uri",
         help=(
             f"Redirect URI to use during authorization. Default value is"
-            f" `http://localhost:8080/bbc-to-spotify`"
+            f" `http://127.0.0.1:8080/bbc-to-spotify`"
         ),
         required=False,
         default=REDIRECT_URI,

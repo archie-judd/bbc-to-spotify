@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 SCOPE = "playlist-modify-public playlist-modify-private"
 ACCOUNTS_BASE_URL = "https://accounts.spotify.com"
-REDIRECT_URI = "http://localhost:8080/bbc-to-spotify"
+REDIRECT_URI = "http://127.0.0.1:8080/bbc-to-spotify"
 CREDENTIALS_PATH = Path(os.path.expanduser("~"), ".bbc-to-spotify", "credentials.json")
 
 

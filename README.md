@@ -72,7 +72,7 @@ You can follow the steps here: https://developer.spotify.com/documentation/web-a
 When asked for a redirect URI, it is recommended to use the following value, however you may use a different one if you would like.
 
 ```
-http://localhost:8080/bbc-to-spotify
+http://127.0.0.1:8080/bbc-to-spotify
 ```
 
 ### Authorize the CLI
@@ -117,7 +117,7 @@ bbc-to-spotify authorize [options]
 
 `--redirect-uri <value>` (string):
 
-> Redirect URI to use during authorization. Default value is `http://localhost:8080/bbc-to-spotify`.
+> Redirect URI to use during authorization. Default value is `http://127.0.0.1:8080/bbc-to-spotify`.
 
 `--verbose`, `-v` (flag):
 
